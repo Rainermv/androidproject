@@ -11,38 +11,16 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by Rainer on 09/06/2016.
  */
-public class Character extends GameObject {
+public class Character extends AnimatedGameObject {
 
-    Animator characterAnimator;
-
-    public Character(){
-
-        characterAnimator = new Animator();
-        /*
-        this.rect = new Rectangle();
-        this.rect.x = 0;
-        this.rect.y = 0;
-        this.rect.width = 32;
-        this.rect.height = 32;
-        */
-        Texture texture = new Texture(Gdx.files.internal("sprites/better.png"));
-        this.sprite = new Sprite(texture);
-        //this.sprite.setScale(0.5f,0.5f);
-        //this.texture = new Texture(Gdx.files.internal("sprites/knight_idle_1.png"));
-    }
-
-    public Character (Sprite sprite){
-        this.sprite = sprite;
-    }
-
-    public Character (TextureAtlas atlas){
-        this.sprite = atlas.createSprite("Attack (1)");
+    public Character (){
+        super();
     }
 
     @Override
     public void draw(SpriteBatch batch) {
 
-        characterAnimator.draw(batch);
+        super.draw(batch);
 
     }
 

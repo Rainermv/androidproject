@@ -43,11 +43,13 @@ public class StaticGameObject extends GameObject{
 
     @Override
     public void draw(SpriteBatch batch) {
+        super.draw(batch);
         this.sprite.draw(batch);
     }
 
     @Override
     public void dispose() {
+        super.dispose();
         this.sprite.getTexture().dispose();
     }
 

@@ -59,6 +59,8 @@ public class AnimatedGameObject extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        super.draw(batch);
+        
         stateTime += Gdx.graphics.getDeltaTime();
         updateAnimation();
         batch.draw(currentFrame,rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight());
