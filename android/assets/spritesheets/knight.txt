@@ -1,0 +1,348 @@
+knight.png
+size: 1024, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Attack (1)
+  rotate: false
+  xy: 0, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (2)
+  rotate: false
+  xy: 146, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (3)
+  rotate: false
+  xy: 292, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (4)
+  rotate: false
+  xy: 438, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (5)
+  rotate: false
+  xy: 584, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (6)
+  rotate: false
+  xy: 730, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (7)
+  rotate: false
+  xy: 876, 0
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (8)
+  rotate: false
+  xy: 0, 176
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (9)
+  rotate: false
+  xy: 146, 176
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Attack (10)
+  rotate: false
+  xy: 292, 176
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Dead (1)
+  rotate: false
+  xy: 438, 176
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (2)
+  rotate: false
+  xy: 674, 176
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (3)
+  rotate: false
+  xy: 0, 363
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (4)
+  rotate: false
+  xy: 236, 363
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (5)
+  rotate: false
+  xy: 472, 363
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (6)
+  rotate: false
+  xy: 708, 363
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (7)
+  rotate: false
+  xy: 0, 550
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (8)
+  rotate: false
+  xy: 236, 550
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (9)
+  rotate: false
+  xy: 472, 550
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Dead (10)
+  rotate: false
+  xy: 708, 550
+  size: 236, 187
+  orig: 236, 187
+  offset: 0, 0
+  index: -1
+Jump (1)
+  rotate: false
+  xy: 0, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (2)
+  rotate: false
+  xy: 146, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (3)
+  rotate: false
+  xy: 292, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (4)
+  rotate: false
+  xy: 438, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (5)
+  rotate: false
+  xy: 584, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (6)
+  rotate: false
+  xy: 730, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (7)
+  rotate: false
+  xy: 876, 737
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (8)
+  rotate: false
+  xy: 0, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (9)
+  rotate: false
+  xy: 146, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Jump (10)
+  rotate: false
+  xy: 292, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (1)
+  rotate: false
+  xy: 438, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (2)
+  rotate: false
+  xy: 584, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (3)
+  rotate: false
+  xy: 730, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (4)
+  rotate: false
+  xy: 876, 913
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (5)
+  rotate: false
+  xy: 0, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (6)
+  rotate: false
+  xy: 146, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (7)
+  rotate: false
+  xy: 292, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (8)
+  rotate: false
+  xy: 438, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (9)
+  rotate: false
+  xy: 584, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+JumpAttack (10)
+  rotate: false
+  xy: 730, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (1)
+  rotate: false
+  xy: 876, 1089
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (2)
+  rotate: false
+  xy: 0, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (3)
+  rotate: false
+  xy: 146, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (4)
+  rotate: false
+  xy: 292, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (5)
+  rotate: false
+  xy: 438, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (6)
+  rotate: false
+  xy: 584, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (7)
+  rotate: false
+  xy: 730, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (8)
+  rotate: false
+  xy: 876, 1265
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
+Run (9)
+  rotate: false
+  xy: 0, 1441
+  size: 146, 176
+  orig: 146, 176
+  offset: 0, 0
+  index: -1
