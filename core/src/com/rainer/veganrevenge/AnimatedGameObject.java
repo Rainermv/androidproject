@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Rainer on 04/07/2016.
@@ -19,20 +21,24 @@ public class AnimatedGameObject extends GameObject {
 
     private float stateTime;
 
-    public AnimatedGameObject(Rectangle rect, Animation animation){
+    public AnimatedGameObject(Vector3 pos, Vector3 scale, Animation animation){
 
-        super(rect);
+        super(new Rectangle(0,0,64,64), pos, scale);
+
         this.animation = animation;
-
         stateTime = 0f;
         updateAnimation();
 
-        currentFrame.getTexture().getWidth();
+        //Rectangle rect = new Rectangle(0,0, currentFrame.getTexture().getWidth(),currentFrame.getTexture().getHeight());
+
+        //currentFrame.getTexture().getWidth();
 
     }
 
     // default constructor
     public AnimatedGameObject(){
+
+        super(new Rectangle(0,0,64,64), new Vector3(0,0,0), new Vector3(2,2,1));
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("spritesheets/knight.txt"));
         TextureRegion[] animFrames = new TextureRegion[10];
@@ -57,7 +63,11 @@ public class AnimatedGameObject extends GameObject {
 
     public void updateAnimation(){
         this.currentFrame = animation.getKeyFrame(stateTime, true);
-        //this.currentFrame.setRegion(rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight());
+
+
+        this.setRectSize(currentFrame.getRegionWidth(),currentFrame.getRegionHeight());
+
+
     }
 
     @Override
@@ -65,7 +75,7 @@ public class AnimatedGameObject extends GameObject {
         super.draw(batch);
         stateTime += Gdx.graphics.getDeltaTime();
         updateAnimation();
-        batch.draw(currentFrame,rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight());
+        batch.draw(currentFrame,this.getX(),this.getY(), this.getW(), this.getH());
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
@@ -14,11 +16,11 @@ public class StaticGameObject extends GameObject{
 
     protected Sprite sprite;
 
-    public StaticGameObject(Rectangle rect, Sprite sprite){
+    public StaticGameObject(Vector3 pos, Vector3 scale, Sprite sprite){
 
-        super(rect);
+        super(sprite.getBoundingRectangle(), pos, scale);
+
         this.sprite = sprite;
-
         adjustSprite();
         //Texture texture = new Texture(Gdx.files.internal(sprite_path));
         //this.sprite = new Sprite(texture, 30,30);
@@ -36,9 +38,9 @@ public class StaticGameObject extends GameObject{
     }
 
     public void adjustSprite(){
-        this.sprite.setX(rect.x);
-        this.sprite.setY(rect.y);
-        this.sprite.setSize(rect.width,rect.height);
+        this.sprite.setX(this.getX());
+        this.sprite.setY(this.getY());
+        this.sprite.setSize(this.getW(),this.getH());
     }
 
     @Override

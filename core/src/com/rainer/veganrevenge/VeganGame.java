@@ -1,5 +1,6 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -34,6 +35,8 @@ public class VeganGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		batch = new SpriteBatch();
 		touch_position = new Vector3();
