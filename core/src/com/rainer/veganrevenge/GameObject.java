@@ -25,8 +25,8 @@ public class GameObject implements Disposable {
         this.rect = new Rectangle();
         this.rect.x = 0;
         this.rect.y = 0;
-        this.rect.width = 32;
-        this.rect.height = 32;
+        this.rect.width = 128;
+        this.rect.height = 128;
     }
 
 

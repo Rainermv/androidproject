@@ -25,6 +25,9 @@ public class AnimatedGameObject extends GameObject {
         this.animation = animation;
 
         stateTime = 0f;
+        updateAnimation();
+
+        currentFrame.getTexture().getWidth();
 
     }
 
@@ -49,7 +52,7 @@ public class AnimatedGameObject extends GameObject {
         //animation = new Animation(1/15f, textureAtlas.getRegions());
         stateTime = 0f;
 
-        //updateAnimation();
+        updateAnimation();
     }
 
     public void updateAnimation(){
@@ -59,8 +62,11 @@ public class AnimatedGameObject extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        super.draw(batch);
+
         stateTime += Gdx.graphics.getDeltaTime();
         updateAnimation();
+        batch.draw(currentFrame,)
         batch.draw(currentFrame,rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight());
     }
 
