@@ -16,16 +16,20 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class AnimatedGameObject extends GameObject {
 
+    protected AnimationFactory animFactoryReference;
+
     protected Animation animation;
     TextureRegion currentFrame;
 
     private float stateTime;
 
-    public AnimatedGameObject(Vector3 pos, Vector3 scale, Animation animation){
+    public AnimatedGameObject(Vector3 pos, Vector3 scale){
 
         super(new Rectangle(0,0,64,64), pos, scale);
 
-        this.animation = animation;
+        animFactoryReference = AnimationFactory.getInstance();
+        this.animation = animFactoryReference.getAnimation("knight_attack");
+
         stateTime = 0f;
         updateAnimation();
 
@@ -38,8 +42,12 @@ public class AnimatedGameObject extends GameObject {
     // default constructor
     public AnimatedGameObject(){
 
-        super(new Rectangle(0,0,64,64), new Vector3(0,0,0), new Vector3(2,2,1));
+        super(new Rectangle(0,0,64,64), new Vector3(0,0,0), new Vector3(0.05f,0.05f,1));
 
+        animFactoryReference = AnimationFactory.getInstance();
+        this.animation = animFactoryReference.getAnimation("knight_attack");
+
+        /*
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("spritesheets/knight.txt"));
         TextureRegion[] animFrames = new TextureRegion[10];
 
@@ -55,6 +63,8 @@ public class AnimatedGameObject extends GameObject {
                 (textureAtlas.findRegion("Attack (9)")),
                 (textureAtlas.findRegion("Attack (10)")));
 
+         */
+
         //animation = new Animation(1/15f, textureAtlas.getRegions());
         stateTime = 0f;
 
@@ -63,8 +73,6 @@ public class AnimatedGameObject extends GameObject {
 
     public void updateAnimation(){
         this.currentFrame = animation.getKeyFrame(stateTime, true);
-
-
         this.setRectSize(currentFrame.getRegionWidth(),currentFrame.getRegionHeight());
 
 

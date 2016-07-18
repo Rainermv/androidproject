@@ -1,5 +1,8 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2D;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -11,6 +14,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -32,9 +37,21 @@ public class VeganGame extends ApplicationAdapter {
 	final HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
 
 	private Array<GameObject> gameObjects = new Array<GameObject>();
+
+	World world;
+	Box2DDebugRenderer debugRenderer;
+	static final float STEP_TIME = 1f / 60f;
+	static final int VELOCITY_ITERATIONS = 6;
+	static final int POSITION_ITERATIONS = 2;
+	float accumulator = 0;
 	
 	@Override
 	public void create () {
+
+		// Inicializa Box2D e cria novo "world"
+		Box2D.init();
+		world = new World(new Vector2(0, -10), true);
+		debugRenderer = new Box2DDebugRenderer();
 
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
@@ -44,11 +61,12 @@ public class VeganGame extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		//camera.setToOrtho(false, 800, 480);
 
-		viewport = new ExtendViewport(800, 600, camera);
+		//viewport = new ExtendViewport(800, 600, camera);
+		viewport = new ExtendViewport(80, 45, camera);
 
 		addSprites("spritesheets/knight.txt");
 		//gameObjects.add(new GameObject());
-		gameObjects.add(new Character());
+		gameObjects.add(new Character(world));
 		//gameObjects.add(new Character(sprites.get("Attack (1)")));
 
 		//GameObject obj2 = new Character(sprites.get("Attack (1)"));
@@ -71,6 +89,8 @@ public class VeganGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 
+		stepWorld();
+
 		if(Gdx.input.isTouched()) {
 			//Vector3 touchPos = new Vector3();
 			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -90,6 +110,8 @@ public class VeganGame extends ApplicationAdapter {
 			obj.draw(batch);
 		}
 		batch.end();
+
+		debugRenderer.render(world, camera.combined);
 	}
 
 	@Override
@@ -111,6 +133,20 @@ public class VeganGame extends ApplicationAdapter {
 			obj.dispose();
 		}
 
+		world.dispose();
 		batch.dispose();
+		debugRenderer.dispose();
+	}
+
+	private void stepWorld() {
+		float delta = Gdx.graphics.getDeltaTime();
+
+		accumulator += Math.min(delta, 0.25f);
+
+		if (accumulator >= STEP_TIME) {
+			accumulator -= STEP_TIME;
+
+			world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		}
 	}
 }
