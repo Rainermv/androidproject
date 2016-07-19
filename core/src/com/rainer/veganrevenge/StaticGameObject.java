@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Scaling;
 
 /**
  * Created by Rainer on 04/07/2016.
@@ -16,31 +17,24 @@ public class StaticGameObject extends GameObject{
 
     protected Sprite sprite;
 
-    public StaticGameObject(Vector3 pos, Vector3 scale, Sprite sprite){
+    public StaticGameObject(Vector3 pos, Sprite sprite, float scale){
 
-        super(sprite.getBoundingRectangle(), pos, scale);
+        super(pos);
 
         this.sprite = sprite;
+        this.sprite.setSize(sprite.getWidth() * scale,sprite.getHeight() * scale);
+
+
         adjustSprite();
-        //Texture texture = new Texture(Gdx.files.internal(sprite_path));
-        //this.sprite = new Sprite(texture, 30,30);
+
     }
 
     // default constructor
-    public StaticGameObject(){
-
-        super();
-
-        Texture texture = new Texture(Gdx.files.internal("sprites/medium.png"));
-        this.sprite = new Sprite(texture);
-
-        adjustSprite();
-    }
 
     public void adjustSprite(){
         this.sprite.setX(this.getX());
         this.sprite.setY(this.getY());
-        this.sprite.setSize(this.getW(),this.getH());
+        //this.sprite.setSize(this.getW(),this.getH());
     }
 
     @Override

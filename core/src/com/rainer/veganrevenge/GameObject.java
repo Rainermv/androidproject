@@ -2,6 +2,7 @@ package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,66 +15,60 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class GameObject implements Disposable {
 
+    //private Rectangle rect; // remover
+    protected float x;
+    protected float y;
 
-    private Rectangle rect; // remover
-    protected Vector3 scale;
 
-    public GameObject(Rectangle rectangle, Vector3 position, Vector3 scale){
-        this.rect = rectangle;
-        this.scale = scale;
+    public GameObject(Vector3 position){
+        //this.rect = rectangle;
+        //this.scale = scale;
 
         this.updatePosition(position);
-        this.scaleRect();
+
+        //this.scaleRect();
     }
 
     public GameObject(){
-        this.rect = new Rectangle();
-        this.rect.x = 0;
-        this.rect.y = 0;
-        this.rect.width = 64;
-        this.rect.height = 64;
+        this.x = 0;
+        this.y = 0;;
 
-        this.scale = new Vector3(1,1,1);
+        //this.rect = new Rectangle();
+        //this.rect.x = 0;
+        //this.rect.y = 0;
+        //this.rect.width = 64;
+        //this.rect.height = 64;
 
-        this.scaleRect();
+
+
+        //this.scale = 0.05f;
+
+        //this.scaleRect();
     }
 
+    /*
     private void scaleRect(){
         this.rect.setSize(rect.width*scale.x, rect.height*scale.y);
     }
+    */
 
     public void updatePosition(Vector3 position){
-        this.rect.setX(position.x);
-        this.rect.setY(position.y);
-    }
-
-    public void setRectSize(float w, float h){
-        this.rect.setWidth(w);
-        this.rect.setHeight(h);
-        scaleRect();
+        this.x = position.x;
+        this.y = position.y;
     }
 
     public float getX(){
-        return this.rect.getX();
+        return this.x;
     }
 
     public float getY(){
-        return this.rect.getY();
+        return this.y;
     }
-
-    public float getW(){
-        return this.rect.getWidth();
-    }
-
-    public float getH(){
-        return this.rect.getHeight();
-    }
-
-
-
-
 
     public void draw(SpriteBatch batch){
+
+
+
         // VIRTUAL
     }
 

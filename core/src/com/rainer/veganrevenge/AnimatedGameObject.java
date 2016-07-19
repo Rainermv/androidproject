@@ -21,61 +21,55 @@ public class AnimatedGameObject extends GameObject {
     protected Animation animation;
     TextureRegion currentFrame;
 
+    final float SCALE = 0.025f;
+
+
     private float stateTime;
 
-    public AnimatedGameObject(Vector3 pos, Vector3 scale){
+    private float height;
+    private float width;
 
-        super(new Rectangle(0,0,64,64), pos, scale);
+    public float getHeight() {
+        return height;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public AnimatedGameObject(Vector3 pos){
+
+        super(pos);
 
         animFactoryReference = AnimationFactory.getInstance();
         this.animation = animFactoryReference.getAnimation("knight_attack");
 
         stateTime = 0f;
+
         updateAnimation();
 
-        //Rectangle rect = new Rectangle(0,0, currentFrame.getTexture().getWidth(),currentFrame.getTexture().getHeight());
 
-        //currentFrame.getTexture().getWidth();
 
     }
 
     // default constructor
     public AnimatedGameObject(){
 
-        super(new Rectangle(0,0,64,64), new Vector3(0,0,0), new Vector3(0.05f,0.05f,1));
+        super();
 
         animFactoryReference = AnimationFactory.getInstance();
         this.animation = animFactoryReference.getAnimation("knight_attack");
 
-        /*
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("spritesheets/knight.txt"));
-        TextureRegion[] animFrames = new TextureRegion[10];
-
-        animation = new Animation(1/15f,
-                (textureAtlas.findRegion("Attack (1)")),
-                (textureAtlas.findRegion("Attack (2)")),
-                (textureAtlas.findRegion("Attack (3)")),
-                (textureAtlas.findRegion("Attack (4)")),
-                (textureAtlas.findRegion("Attack (5)")),
-                (textureAtlas.findRegion("Attack (6)")),
-                (textureAtlas.findRegion("Attack (7)")),
-                (textureAtlas.findRegion("Attack (8)")),
-                (textureAtlas.findRegion("Attack (9)")),
-                (textureAtlas.findRegion("Attack (10)")));
-
-         */
-
-        //animation = new Animation(1/15f, textureAtlas.getRegions());
         stateTime = 0f;
 
         updateAnimation();
+
     }
 
     public void updateAnimation(){
         this.currentFrame = animation.getKeyFrame(stateTime, true);
-        this.setRectSize(currentFrame.getRegionWidth(),currentFrame.getRegionHeight());
-
-
+        width = currentFrame.getRegionWidth() * SCALE;
+        height = currentFrame.getRegionHeight() * SCALE;
     }
 
     @Override
@@ -83,7 +77,8 @@ public class AnimatedGameObject extends GameObject {
         super.draw(batch);
         stateTime += Gdx.graphics.getDeltaTime();
         updateAnimation();
-        batch.draw(currentFrame,this.getX(),this.getY(), this.getW(), this.getH());
+
+        batch.draw(currentFrame,this.getX()  - width/2,this.getY() - height/2, width, height);
     }
 
     @Override
