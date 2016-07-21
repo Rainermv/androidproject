@@ -9,6 +9,10 @@ import com.badlogic.gdx.physics.box2d.World;
  * Created by rainervieira on 18/07/2016.
  */
 public class Player extends Character {
+
+    private float speed = 50;//5;
+    private float jump_force = 5000;
+
     public Player(World world, Vector3 position, float body_scale) {
         super(world, position, body_scale);
     }
@@ -17,11 +21,18 @@ public class Player extends Character {
     public void onScreenTouch(Vector3 touch_position) {
 
         super.onScreenTouch(touch_position);
-        physicsBody.applyForceToCenter(0f,100f,true);
+        physicsBody.applyForceToCenter(0f,this.jump_force,true);
 
-        physicsBody.setLinearVelocity(5,0);
+
         //this.updatePosition(touch_position);
         //this.rect.x = touch_position.x - this.rect.width /2;
+
+    }
+
+    @Override
+    public void start(){
+
+        physicsBody.setLinearVelocity(this.speed,0);
 
     }
 }

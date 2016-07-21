@@ -17,13 +17,13 @@ public class StaticGameObject extends GameObject{
 
     protected Sprite sprite;
 
-    public StaticGameObject(Vector3 pos, Sprite sprite, float scale){
+    public StaticGameObject(Vector3 pos, Texture texture, float scale){
 
         super(pos);
 
-        this.sprite = sprite;
+        this.sprite = new Sprite(texture);
+        //sprite;
         this.sprite.setSize(sprite.getWidth() * scale,sprite.getHeight() * scale);
-
 
         adjustSprite();
 
@@ -40,7 +40,9 @@ public class StaticGameObject extends GameObject{
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
+        adjustSprite();
         this.sprite.draw(batch);
+        //sprite.
     }
 
     @Override
@@ -48,5 +50,14 @@ public class StaticGameObject extends GameObject{
         super.dispose();
         this.sprite.getTexture().dispose();
     }
+
+    public float getWidth(){
+        return sprite.getWidth();
+    }
+
+    public float getHeight(){
+        return sprite.getHeight();
+    }
+
 
 }

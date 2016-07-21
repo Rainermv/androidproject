@@ -57,6 +57,11 @@ public class GameObject implements Disposable {
         this.y = position.y;
     }
 
+    public void translate(float x,float y){
+        this.x+=x;
+        this.y+=y;
+    }
+
     public float getX(){
         return this.x;
     }
@@ -69,6 +74,10 @@ public class GameObject implements Disposable {
 
 
 
+        // VIRTUAL
+    }
+
+    public void start(){
         // VIRTUAL
     }
 

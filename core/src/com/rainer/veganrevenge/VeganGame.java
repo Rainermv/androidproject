@@ -13,8 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
@@ -22,12 +20,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class VeganGame extends ApplicationAdapter {
 
@@ -35,12 +29,16 @@ public class VeganGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
+	final float VIEWPORT_WIDTH = 80;//40;
+	final float VIEWPORT_HEIGHT = 50;//25;
+
 	private Vector3 touch_position;
 	//Texture img;
 
-	final HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
+	final HashMap<String, Texture> static_textures = new HashMap<String, Texture>();
 
-	private Array<GameObject> gameObjects = new Array<GameObject>();
+	private Array<StaticGameObject> background = new Array<StaticGameObject>();
+	private Array<GameObject> foreground = new Array<GameObject>();
 
 	World world;
 	Box2DDebugRenderer debugRenderer;
@@ -50,6 +48,9 @@ public class VeganGame extends ApplicationAdapter {
 	float accumulator = 0;
 
 	Player thePlayer;
+
+	//StaticGameObject bg1 = null;
+	//StaticGameObject bg2 = null;
 	
 	@Override
 	public void create () {
@@ -65,27 +66,63 @@ public class VeganGame extends ApplicationAdapter {
 		//camera.setToOrtho(false, 800, 480);
 
 		//viewport = new ExtendViewport(800, 600, camera);
-		viewport = new ExtendViewport(40, 25, camera);
+		viewport = new ExtendViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
 
 		//addSprites("spritesheets/knight.txt"); // add background
-		sprites.put("background", new Sprite(new Texture("sprites/bg.png")));
+		static_textures.put("background", new Texture("sprites/bg.png"));
 		//addSprites("sprites/bg.png");
-		//gameObjects.add(new GameObject());
+		//foreground.add(new GameObject());
 
 		thePlayer = new Player(world, new Vector3(5,10,0), 0.8f);
 
-		gameObjects.add(new StaticGameObject(new Vector3(0,0,0),sprites.get("background"), 0.05f));
-		gameObjects.add(thePlayer);
+		buildBackground();
 
+		foreground.add(thePlayer);
+
+		for (GameObject obj : background) {
+			obj.start();
+		}
+		for (GameObject obj : foreground) {
+			obj.start();
+		}
+	}
+
+	private void buildBackground(){
+		int BACKGROUND_IMAGES = 4;
+
+		for (int i = 0; i < BACKGROUND_IMAGES; i++){
+			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), 0.05f));
+		}
+
+		float width = background.get().getWidth();
+		bg1.updatePosition(new Vector3(-width/2,0,0));
+		bg2.updatePosition(new Vector3(width/2,0,0));
+		bg3.updatePosition(new Vector3(width/2,0,0));
+		bg4.updatePosition(new Vector3(width/2,0,0));
+
+		background.add(bg1);
+		background.add(bg2);
 
 	}
 
 	private void cameraFollow(GameObject target){
 
 		camera.position.x = target.getX();
-		//camera.translate(0.5f,0);
-		//Gdx.app.log("cam", "x: "+camera.position.x);
 
+	}
+
+	private void updateBackground(GameObject target){
+
+		float x = target.getX();
+
+		for (GameObject obj : background) {
+			StaticGameObject bg =(StaticGameObject)obj;
+
+			if (bg.x + bg.getWidth() * 0.9  < x){
+
+				bg.translate(bg.getWidth()*2,0);
+			}
+		}
 	}
 
 	private void setUpBox2D(){
@@ -138,7 +175,10 @@ public class VeganGame extends ApplicationAdapter {
 			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(this.touch_position);
 
-			for (GameObject obj : gameObjects) {
+			for (GameObject obj : background) {
+				obj.onScreenTouch(touch_position);
+			}
+			for (GameObject obj : foreground) {
 				obj.onScreenTouch(touch_position);
 			}
 		}
@@ -148,16 +188,17 @@ public class VeganGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
+		updateBackground(thePlayer);
 		//
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		for (GameObject obj : gameObjects){
+		for (GameObject obj : background){
+			obj.draw(batch);
+		}
+		for (GameObject obj : foreground){
 			obj.draw(batch);
 		}
 		batch.end();
-
-
 
 		debugRenderer.render(world, camera.combined);
 
@@ -178,7 +219,10 @@ public class VeganGame extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 
-		for (GameObject obj : gameObjects) {
+		for (GameObject obj : background) {
+			obj.dispose();
+		}
+		for (GameObject obj : foreground) {
 			obj.dispose();
 		}
 
