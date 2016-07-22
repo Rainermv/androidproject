@@ -29,8 +29,12 @@ public class VeganGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
-	final float VIEWPORT_WIDTH = 80;//40;
-	final float VIEWPORT_HEIGHT = 50;//25;
+	final float VIEWPORT_WIDTH = 40;//80;//40;
+	final float VIEWPORT_HEIGHT = 25;//50;//25;
+
+	final int BACKGROUND_IMAGES = 4;
+
+	ListenerClass contactListener;
 
 	private Vector3 touch_position;
 	//Texture img;
@@ -39,6 +43,9 @@ public class VeganGame extends ApplicationAdapter {
 
 	private Array<StaticGameObject> background = new Array<StaticGameObject>();
 	private Array<GameObject> foreground = new Array<GameObject>();
+
+	private Floor theFloor;
+	final float floor_height = 10f;
 
 	World world;
 	Box2DDebugRenderer debugRenderer;
@@ -54,6 +61,7 @@ public class VeganGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+
 
 		setUpBox2D();
 
@@ -73,11 +81,13 @@ public class VeganGame extends ApplicationAdapter {
 		//addSprites("sprites/bg.png");
 		//foreground.add(new GameObject());
 
-		thePlayer = new Player(world, new Vector3(5,10,0), 0.8f);
+		thePlayer = new Player(world, new Vector3(5,floor_height,0), 0.8f);
 
 		buildBackground();
 
 		foreground.add(thePlayer);
+
+		world.setContactListener(contactListener);
 
 		for (GameObject obj : background) {
 			obj.start();
@@ -88,21 +98,17 @@ public class VeganGame extends ApplicationAdapter {
 	}
 
 	private void buildBackground(){
-		int BACKGROUND_IMAGES = 4;
 
 		for (int i = 0; i < BACKGROUND_IMAGES; i++){
 			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), 0.05f));
 		}
 
-		float width = background.get().getWidth();
-		bg1.updatePosition(new Vector3(-width/2,0,0));
-		bg2.updatePosition(new Vector3(width/2,0,0));
-		bg3.updatePosition(new Vector3(width/2,0,0));
-		bg4.updatePosition(new Vector3(width/2,0,0));
+		float terrain_width = background.get(0).getWidth();
+		for (int i = 0; i < BACKGROUND_IMAGES; i++){
 
-		background.add(bg1);
-		background.add(bg2);
+			background.get(i).updatePosition(new Vector3(terrain_width * (i -1),0,0));
 
+		}
 	}
 
 	private void cameraFollow(GameObject target){
@@ -116,11 +122,18 @@ public class VeganGame extends ApplicationAdapter {
 		float x = target.getX();
 
 		for (GameObject obj : background) {
+
 			StaticGameObject bg =(StaticGameObject)obj;
+			float translate_point = bg.x + bg.getWidth() + (background.size/2 ) * bg.getWidth();
 
-			if (bg.x + bg.getWidth() * 0.9  < x){
+			if (x  > translate_point){
+				bg.translate(bg.getWidth()* background.size,0);
 
-				bg.translate(bg.getWidth()*2,0);
+				Logger.log("player pos: " + x);
+
+				theFloor.extend(bg.getWidth());
+
+				break;
 			}
 		}
 	}
@@ -132,22 +145,7 @@ public class VeganGame extends ApplicationAdapter {
 		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
 
-		BodyDef floor = new BodyDef();
-		floor.type = BodyDef.BodyType.StaticBody;
-		floor.position.set(0, 0);
-
-		Body floorBody = world.createBody(floor);
-
-		EdgeShape floorShape = new EdgeShape();
-		floorShape.set(0,5,1000,5);
-
-		FixtureDef fixture = new FixtureDef();
-		fixture.friction = 0;
-		fixture.restitution = 0;
-		fixture.density = 1;
-		fixture.shape = floorShape;
-
-		floorBody.createFixture(fixture);
+		theFloor = new Floor(world, 10000000000000000f, floor_height);
 
 	}
 
@@ -175,9 +173,6 @@ public class VeganGame extends ApplicationAdapter {
 			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(this.touch_position);
 
-			for (GameObject obj : background) {
-				obj.onScreenTouch(touch_position);
-			}
 			for (GameObject obj : foreground) {
 				obj.onScreenTouch(touch_position);
 			}
@@ -219,7 +214,7 @@ public class VeganGame extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 
-		for (GameObject obj : background) {
+		for (StaticGameObject obj : background) {
 			obj.dispose();
 		}
 		for (GameObject obj : foreground) {

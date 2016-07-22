@@ -19,6 +19,7 @@ public class GameObject implements Disposable {
     protected float x;
     protected float y;
 
+    public String tag ="";
 
     public GameObject(Vector3 position){
         //this.rect = rectangle;
@@ -26,7 +27,7 @@ public class GameObject implements Disposable {
 
         this.updatePosition(position);
 
-        //this.scaleRect();
+        //this.scaleRect();me
     }
 
     public GameObject(){

@@ -12,8 +12,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -21,14 +25,12 @@ import com.badlogic.gdx.physics.box2d.World;
 /**
  * Created by Rainer on 09/06/2016.
  */
-public class Character extends AnimatedGameObject {
+public class Character extends AnimatedGameObject{
 
     BitmapFont debug_font = new BitmapFont(); //or use alex answer to use custom font
 
     Body physicsBody;
 
-    //float body_scale_x = 1f;
-    //float body_scale_y = 1f;
 
     public Character (World world, Vector3 position, float body_scale){
 
@@ -61,6 +63,8 @@ public class Character extends AnimatedGameObject {
 
         shape.dispose();
 
+        physicsBody.setUserData(this);
+
     }
 
     @Override
@@ -83,4 +87,5 @@ public class Character extends AnimatedGameObject {
         //this.rect.x = touch_position.x - this.rect.width /2;
 
     }
+
 }
