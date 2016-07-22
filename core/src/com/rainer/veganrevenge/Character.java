@@ -27,17 +27,15 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Character extends AnimatedGameObject{
 
-    BitmapFont debug_font = new BitmapFont(); //or use alex answer to use custom font
-
     Body physicsBody;
 
+    boolean floorContact = true;
 
-    public Character (World world, Vector3 position, float body_scale){
+    public Character (World world, Vector3 position, float spriteScale, float bodyScale){
 
-        super(position);
+        super(position, spriteScale);
 
-        debug_font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        debug_font.getData().setScale(0.1f);
+        this.tag = "PLAYER";
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -49,12 +47,12 @@ public class Character extends AnimatedGameObject{
         //PolygonShape bodyShape = new PolygonShape();
         //bodyShape.setAsBox(getWidth()/2 * body_scale.x,getHeight()/2 * body_scale.y);
         CircleShape shape = new CircleShape();
-        shape.setRadius(getHeight()/2 * body_scale);
+        shape.setRadius(getHeight()/2 * bodyScale);
 
         FixtureDef fixture = new FixtureDef();
         fixture.friction = 0;
         fixture.restitution = 0;
-        fixture.density = 1;
+        fixture.density = 0.33f;
         fixture.shape = shape;
 
         physicsBody.createFixture(fixture);
@@ -79,13 +77,13 @@ public class Character extends AnimatedGameObject{
     @Override
     public void onScreenTouch(Vector3 touch_position) {
 
-        super.onScreenTouch(touch_position);
-        physicsBody.applyForceToCenter(0f,100f,true);
 
-        physicsBody.setLinearVelocity(5,0);
-        //this.updatePosition(touch_position);
-        //this.rect.x = touch_position.x - this.rect.width /2;
+    }
 
+    public void setContact(boolean contact){
+        this.floorContact = contact;
+
+        Logger.log("floor contact: " + this.floorContact);
     }
 
 }

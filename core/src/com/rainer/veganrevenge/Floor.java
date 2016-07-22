@@ -1,5 +1,6 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
@@ -17,14 +18,18 @@ public class Floor extends GameObject {
 
     private float width = 0;
 
-    public Floor(World world, float width, float height){
+    public Floor(World world, float width, float height, float scale){
+
+        super(new Vector3(0,0,0), scale);
+
+        this.tag = "FLOOR";
 
         this.width = width;
         this.height = height;
 
         BodyDef floor = new BodyDef();
         floor.type = BodyDef.BodyType.StaticBody;
-        floor.position.set(0,0);
+        floor.position.set(this.x,this.y);
 
         physicsBody = world.createBody(floor);
 

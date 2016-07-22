@@ -1,5 +1,7 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -23,29 +25,31 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.HashMap;
 
-public class VeganGame extends ApplicationAdapter {
+public class VeganGame extends ApplicationAdapter{
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
-	final float VIEWPORT_WIDTH = 40;//80;//40;
-	final float VIEWPORT_HEIGHT = 25;//50;//25;
+	final float VIEWPORT_WIDTH = 20;//80;//40;
+	final float VIEWPORT_HEIGHT = 12;//50;//25;
+
+	final float CHARSCALE = 0.01f;
+	final float BODYSCALE = 0.8f;
+
+	final float GRAVITY = -15;
 
 	final int BACKGROUND_IMAGES = 4;
 
-	ListenerClass contactListener;
+	ListenerClass contactListener = ListenerClass.getInstance();
+	InputHandler inputHandler = InputHandler.getInstance();
 
-	private Vector3 touch_position;
+
 	//Texture img;
 
 	final HashMap<String, Texture> static_textures = new HashMap<String, Texture>();
-
-	private Array<StaticGameObject> background = new Array<StaticGameObject>();
-	private Array<GameObject> foreground = new Array<GameObject>();
-
 	private Floor theFloor;
-	final float floor_height = 10f;
+	final float floor_height = 2f;
 
 	World world;
 	Box2DDebugRenderer debugRenderer;
@@ -54,7 +58,10 @@ public class VeganGame extends ApplicationAdapter {
 	static final int POSITION_ITERATIONS = 2;
 	float accumulator = 0;
 
-	Player thePlayer;
+	public Player thePlayer;
+
+	public Array<StaticGameObject> background = new Array<StaticGameObject>();
+	public Array<GameObject> foreground = new Array<GameObject>();
 
 	//StaticGameObject bg1 = null;
 	//StaticGameObject bg2 = null;
@@ -62,14 +69,11 @@ public class VeganGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 
-
 		setUpBox2D();
 
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		batch = new SpriteBatch();
-		touch_position = new Vector3();
-
 		camera = new OrthographicCamera();
 		//camera.setToOrtho(false, 800, 480);
 
@@ -81,7 +85,7 @@ public class VeganGame extends ApplicationAdapter {
 		//addSprites("sprites/bg.png");
 		//foreground.add(new GameObject());
 
-		thePlayer = new Player(world, new Vector3(5,floor_height,0), 0.8f);
+		thePlayer = new Player(world, new Vector3(5,floor_height,0), CHARSCALE, BODYSCALE);
 
 		buildBackground();
 
@@ -95,12 +99,15 @@ public class VeganGame extends ApplicationAdapter {
 		for (GameObject obj : foreground) {
 			obj.start();
 		}
+
+		inputHandler.set(this, camera);
+		Gdx.input.setInputProcessor(inputHandler);
 	}
 
 	private void buildBackground(){
 
 		for (int i = 0; i < BACKGROUND_IMAGES; i++){
-			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), 0.05f));
+			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), CHARSCALE * 2));
 		}
 
 		float terrain_width = background.get(0).getWidth();
@@ -142,10 +149,10 @@ public class VeganGame extends ApplicationAdapter {
 
 		// Inicializa Box2D e cria novo "world"
 		Box2D.init();
-		world = new World(new Vector2(0, -10), true);
+		world = new World(new Vector2(0, GRAVITY), true);
 		debugRenderer = new Box2DDebugRenderer();
 
-		theFloor = new Floor(world, 10000000000000000f, floor_height);
+		theFloor = new Floor(world, 10000000000000000f, floor_height, CHARSCALE);
 
 	}
 
@@ -162,12 +169,15 @@ public class VeganGame extends ApplicationAdapter {
 	}
 	*/
 
+
+
 	@Override
 	public void render () {
 
 		cameraFollow(thePlayer);
 		camera.update();
 
+		/*
 		if(Gdx.input.isTouched()) {
 			//Vector3 touchPos = new Vector3();
 			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -177,6 +187,7 @@ public class VeganGame extends ApplicationAdapter {
 				obj.onScreenTouch(touch_position);
 			}
 		}
+		*/
 
 		stepWorld();
 

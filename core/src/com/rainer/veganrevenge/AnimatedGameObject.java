@@ -21,9 +21,6 @@ public class AnimatedGameObject extends GameObject {
     protected Animation animation;
     TextureRegion currentFrame;
 
-    final float SCALE = 0.025f;
-
-
     private float stateTime;
 
     private float height;
@@ -37,9 +34,9 @@ public class AnimatedGameObject extends GameObject {
         return width;
     }
 
-    public AnimatedGameObject(Vector3 pos){
+    public AnimatedGameObject(Vector3 pos, float scale){
 
-        super(pos);
+        super(pos, scale);
 
         animFactoryReference = AnimationFactory.getInstance();
         this.animation = animFactoryReference.getAnimation("knight_attack");
@@ -52,19 +49,6 @@ public class AnimatedGameObject extends GameObject {
 
     }
 
-    // default constructor
-    public AnimatedGameObject(){
-
-        super();
-
-        animFactoryReference = AnimationFactory.getInstance();
-        this.animation = animFactoryReference.getAnimation("knight_attack");
-
-        stateTime = 0f;
-
-        updateAnimation();
-
-    }
 
     public void updateAnimation(){
         this.currentFrame = animation.getKeyFrame(stateTime, true);

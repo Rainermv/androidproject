@@ -19,7 +19,7 @@ public class StaticGameObject extends GameObject{
 
     public StaticGameObject(Vector3 pos, Texture texture, float scale){
 
-        super(pos);
+        super(pos, scale);
 
         this.sprite = new Sprite(texture);
         //sprite;

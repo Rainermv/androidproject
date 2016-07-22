@@ -10,22 +10,51 @@ import com.badlogic.gdx.physics.box2d.Manifold;
  */
 public class ListenerClass  implements ContactListener {
 
+    private static ListenerClass instance;
+    private ListenerClass(){
+
+    }
+
+    public static ListenerClass getInstance(){
+
+        if (instance == null){
+            instance = new ListenerClass();
+        }
+
+        return instance;
+    }
+
     @Override
     public void beginContact(Contact contact) {
 
-        Object userData = null;
+        GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
+        GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
 
-        userData = contact.getFixtureA().getBody().getUserData();
+        Logger.log("CONTACT | A: " + obja.tag + " | B: " + objb.tag);
 
-        if (userData != null){
-
+        if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
+            ((Character)obja).setContact(true);
         }
-
+        else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
+            ((Character)objb).setContact(true);
+        }
 
     }
 
     @Override
     public void endContact(Contact contact) {
+
+        GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
+        GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
+
+        Logger.log("E CONTACT | A: " + obja.tag + " | B: " + objb.tag);
+
+        if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
+            ((Character)obja).setContact(false);
+        }
+        else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
+            ((Character)objb).setContact(false);
+        }
 
     }
 

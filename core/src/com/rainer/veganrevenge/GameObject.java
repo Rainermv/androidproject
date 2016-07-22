@@ -21,32 +21,18 @@ public class GameObject implements Disposable {
 
     public String tag ="";
 
-    public GameObject(Vector3 position){
+    public float SCALE;
+
+    public GameObject(Vector3 position, float scale){
         //this.rect = rectangle;
         //this.scale = scale;
+
+        this.SCALE = scale;
 
         this.updatePosition(position);
 
         //this.scaleRect();me
     }
-
-    public GameObject(){
-        this.x = 0;
-        this.y = 0;;
-
-        //this.rect = new Rectangle();
-        //this.rect.x = 0;
-        //this.rect.y = 0;
-        //this.rect.width = 64;
-        //this.rect.height = 64;
-
-
-
-        //this.scale = 0.05f;
-
-        //this.scaleRect();
-    }
-
     /*
     private void scaleRect(){
         this.rect.setSize(rect.width*scale.x, rect.height*scale.y);
