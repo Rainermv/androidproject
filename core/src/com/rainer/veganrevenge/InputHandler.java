@@ -57,7 +57,7 @@ public class InputHandler implements InputProcessor {
         if (button != Input.Buttons.LEFT || pointer > 0) return false;
         cam.unproject(touch_position.set(screenX, screenY, 0));
 
-        for (GameObject obj : game.foreground) {
+        for (GameObject obj : game.characters) {
             obj.onScreenTouch(touch_position);
         }
 

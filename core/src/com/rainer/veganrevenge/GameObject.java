@@ -1,10 +1,12 @@
 package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -58,9 +60,10 @@ public class GameObject implements Disposable {
     }
 
     public void draw(SpriteBatch batch){
+        // VIRTUAL
+    }
 
-
-
+    public void drawUI(ShapeRenderer renderer, Camera cam){
         // VIRTUAL
     }
 

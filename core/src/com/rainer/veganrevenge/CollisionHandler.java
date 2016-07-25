@@ -8,17 +8,17 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 /**
  * Created by rainervieira on 21/07/2016.
  */
-public class ListenerClass  implements ContactListener {
+public class CollisionHandler implements ContactListener {
 
-    private static ListenerClass instance;
-    private ListenerClass(){
+    private static CollisionHandler instance;
+    private CollisionHandler(){
 
     }
 
-    public static ListenerClass getInstance(){
+    public static CollisionHandler getInstance(){
 
         if (instance == null){
-            instance = new ListenerClass();
+            instance = new CollisionHandler();
         }
 
         return instance;
@@ -30,15 +30,18 @@ public class ListenerClass  implements ContactListener {
         GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
         GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
 
-        Logger.log("CONTACT | A: " + obja.tag + " | B: " + objb.tag);
-
         if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
             ((Character)obja).setContact(true);
         }
         else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
             ((Character)objb).setContact(true);
         }
-
+        if (obja instanceof Sensor && objb instanceof Character){
+            ((Sensor)obja).enter((Character)objb);
+        }
+        if (objb instanceof Sensor && obja instanceof Character){
+            ((Sensor)objb).enter((Character)obja);
+        }
     }
 
     @Override
@@ -47,19 +50,24 @@ public class ListenerClass  implements ContactListener {
         GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
         GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
 
-        Logger.log("E CONTACT | A: " + obja.tag + " | B: " + objb.tag);
-
         if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
             ((Character)obja).setContact(false);
         }
         else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
             ((Character)objb).setContact(false);
         }
+        if (obja instanceof Sensor && objb instanceof Character){
+            ((Sensor)obja).exit((Character)objb);
+        }
+        if (objb instanceof Sensor && obja instanceof Character){
+            ((Sensor)objb).exit((Character)obja);
+        }
 
     }
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+
 
     }
 

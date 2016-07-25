@@ -1,6 +1,7 @@
 package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,17 +23,23 @@ public class AnimatedGameObject extends GameObject {
     TextureRegion currentFrame;
 
     private float stateTime;
-
     private float height;
     private float width;
+
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    private boolean flipped;
 
     public float getHeight() {
         return height;
     }
-
     public float getWidth() {
         return width;
     }
+
+    private ColorTinter tinter = new ColorTinter();
 
     public AnimatedGameObject(Vector3 pos, float scale){
 
@@ -45,10 +52,7 @@ public class AnimatedGameObject extends GameObject {
 
         updateAnimation();
 
-
-
     }
-
 
     public void updateAnimation(){
         this.currentFrame = animation.getKeyFrame(stateTime, true);
@@ -62,13 +66,38 @@ public class AnimatedGameObject extends GameObject {
         stateTime += Gdx.graphics.getDeltaTime();
         updateAnimation();
 
-        batch.draw(currentFrame,this.getX()  - width/2,this.getY() - height/2, width, height);
+        float drawWidth = width;
+        float drawHeigth = height;
+        float drawX = this.getX() - width/2;
+        float drawY = this.getY() - height/2;
+
+        if (flipped){
+            drawWidth = -drawWidth;
+            drawX = this.getX() + width/2;
+        }
+
+        if (tinter.isActive()){
+            tinter.step();
+            batch.setColor(tinter.getColor());
+        }
+
+        batch.draw(currentFrame,drawX,drawY, drawWidth, drawHeigth);
+
+        if (tinter.isActive()){
+            batch.setColor(Color.WHITE);
+        }
     }
 
     @Override
     public void dispose() {
         super.dispose();
         this.currentFrame.getTexture().dispose();
+    }
+
+    public void flashTint(Color color, float colorIn, float colorOut){
+
+        tinter.start(color, colorIn, colorOut);
+
     }
 
 }

@@ -1,10 +1,8 @@
 package com.rainer.veganrevenge;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 
 import com.badlogic.gdx.Application;
@@ -13,14 +11,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.HashMap;
@@ -28,11 +24,14 @@ import java.util.HashMap;
 public class VeganGame extends ApplicationAdapter{
 
 	private SpriteBatch batch;
+	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
 	final float VIEWPORT_WIDTH = 20;//80;//40;
 	final float VIEWPORT_HEIGHT = 12;//50;//25;
+
+	final float CAMERA_OFFSET = 7;
 
 	final float CHARSCALE = 0.01f;
 	final float BODYSCALE = 0.8f;
@@ -41,15 +40,19 @@ public class VeganGame extends ApplicationAdapter{
 
 	final int BACKGROUND_IMAGES = 4;
 
-	ListenerClass contactListener = ListenerClass.getInstance();
+	final float SPAWN_OFFSET = 18;
+	float SPAWN_TIMER_START = 2;
+	float SPAWN_TIMER_END = 5;
+
+	Timer enemySpawner;
+
+	CollisionHandler contactListener = CollisionHandler.getInstance();
 	InputHandler inputHandler = InputHandler.getInstance();
-
-
 	//Texture img;
 
 	final HashMap<String, Texture> static_textures = new HashMap<String, Texture>();
 	private Floor theFloor;
-	final float floor_height = 2f;
+	final float FLOOR_HEIGHT = 2f;
 
 	World world;
 	Box2DDebugRenderer debugRenderer;
@@ -61,7 +64,7 @@ public class VeganGame extends ApplicationAdapter{
 	public Player thePlayer;
 
 	public Array<StaticGameObject> background = new Array<StaticGameObject>();
-	public Array<GameObject> foreground = new Array<GameObject>();
+	public Array<GameObject> characters = new Array<GameObject>();
 
 	//StaticGameObject bg1 = null;
 	//StaticGameObject bg2 = null;
@@ -74,7 +77,10 @@ public class VeganGame extends ApplicationAdapter{
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
+
 		camera = new OrthographicCamera();
+		enemySpawner = new Timer();
 		//camera.setToOrtho(false, 800, 480);
 
 		//viewport = new ExtendViewport(800, 600, camera);
@@ -83,28 +89,21 @@ public class VeganGame extends ApplicationAdapter{
 		//addSprites("spritesheets/knight.txt"); // add background
 		static_textures.put("background", new Texture("sprites/bg.png"));
 		//addSprites("sprites/bg.png");
-		//foreground.add(new GameObject());
 
-		thePlayer = new Player(world, new Vector3(5,floor_height,0), CHARSCALE, BODYSCALE);
+		thePlayer = new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE);
 
-		buildBackground();
+		setUpBackground();
+		scheduleSpawnTimer();
 
-		foreground.add(thePlayer);
+		AddCharacter(thePlayer);
 
 		world.setContactListener(contactListener);
-
-		for (GameObject obj : background) {
-			obj.start();
-		}
-		for (GameObject obj : foreground) {
-			obj.start();
-		}
 
 		inputHandler.set(this, camera);
 		Gdx.input.setInputProcessor(inputHandler);
 	}
 
-	private void buildBackground(){
+	private void setUpBackground(){
 
 		for (int i = 0; i < BACKGROUND_IMAGES; i++){
 			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), CHARSCALE * 2));
@@ -120,7 +119,22 @@ public class VeganGame extends ApplicationAdapter{
 
 	private void cameraFollow(GameObject target){
 
-		camera.position.x = target.getX();
+		camera.position.x = target.getX() + CAMERA_OFFSET;
+
+	}
+
+	private void scheduleSpawnTimer(){
+
+		final float spawnTime = MathUtils.random(SPAWN_TIMER_START, SPAWN_TIMER_END);
+
+		enemySpawner.scheduleTask(new Timer.Task(){
+
+			@Override
+			public void run(){
+				spawnEnemy();
+				scheduleSpawnTimer();
+			}
+		}, spawnTime);
 
 	}
 
@@ -152,7 +166,7 @@ public class VeganGame extends ApplicationAdapter{
 		world = new World(new Vector2(0, GRAVITY), true);
 		debugRenderer = new Box2DDebugRenderer();
 
-		theFloor = new Floor(world, 10000000000000000f, floor_height, CHARSCALE);
+		theFloor = new Floor(world, 10000000000000000f, FLOOR_HEIGHT, CHARSCALE);
 
 	}
 
@@ -183,7 +197,7 @@ public class VeganGame extends ApplicationAdapter{
 			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(this.touch_position);
 
-			for (GameObject obj : foreground) {
+			for (GameObject obj : characters) {
 				obj.onScreenTouch(touch_position);
 			}
 		}
@@ -195,16 +209,24 @@ public class VeganGame extends ApplicationAdapter{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		updateBackground(thePlayer);
-		//
+
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		for (GameObject obj : background){
 			obj.draw(batch);
 		}
-		for (GameObject obj : foreground){
+		for (GameObject obj : characters){
 			obj.draw(batch);
 		}
 		batch.end();
+
+
+		batch.setProjectionMatrix(camera.projection);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		for (GameObject obj : characters){
+			obj.drawUI(shapeRenderer, camera);
+		}
+		shapeRenderer.end();
 
 		debugRenderer.render(world, camera.combined);
 
@@ -228,7 +250,7 @@ public class VeganGame extends ApplicationAdapter{
 		for (StaticGameObject obj : background) {
 			obj.dispose();
 		}
-		for (GameObject obj : foreground) {
+		for (GameObject obj : characters) {
 			obj.dispose();
 		}
 
@@ -247,5 +269,17 @@ public class VeganGame extends ApplicationAdapter{
 
 			world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 		}
+	}
+
+	private void spawnEnemy(){
+
+		Vector3 position = new Vector3(thePlayer.getX() + SPAWN_OFFSET, FLOOR_HEIGHT, 0);
+		AddCharacter(new Enemy(world, position, CHARSCALE, BODYSCALE));
+
+	}
+
+	private void AddCharacter(Character c){
+		c.start();
+		characters.add(c);
 	}
 }
