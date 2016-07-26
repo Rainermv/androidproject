@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by Rainer on 09/06/2016.
  */
-public class Character extends AnimatedGameObject{
+public class Character extends AnimatedGameObject  {
 
     Body physicsBody;
 
@@ -156,5 +157,10 @@ public class Character extends AnimatedGameObject{
     public void onSensorExit(String sensorTag, Character other){
         // VIRTUAL
     }
+
+    public void isTouched(ArrayList<Character> touchedCharacters){
+
+    }
+
 
 }

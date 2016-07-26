@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class VeganGame extends ApplicationAdapter{
 
 	private SpriteBatch batch;
-	private ShapeRenderer shapeRenderer;
+	public ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
@@ -64,7 +64,7 @@ public class VeganGame extends ApplicationAdapter{
 	public Player thePlayer;
 
 	public Array<StaticGameObject> background = new Array<StaticGameObject>();
-	public Array<GameObject> characters = new Array<GameObject>();
+	public Array<Character> characters = new Array<Character>();
 
 	//StaticGameObject bg1 = null;
 	//StaticGameObject bg2 = null;
