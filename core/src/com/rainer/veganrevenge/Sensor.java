@@ -66,7 +66,9 @@ public class Sensor extends GameObject {
 
     public void updateSensor(Vector3 pos){
         super.updatePosition(pos);
-        sensorBody.setTransform(pos.x, pos.y, 0);
+        if (sensorBody != null) {
+            sensorBody.setTransform(pos.x, pos.y, 0);
+        }
     }
 
     public void enter(Character other){
@@ -81,6 +83,9 @@ public class Sensor extends GameObject {
     public void dispose() {
         super.dispose();
 
-        worldReference.destroyBody(this.sensorBody);
+        if (this.sensorBody != null) {
+            worldReference.destroyBody(this.sensorBody);
+            this.sensorBody = null;
+        }
     }
 }

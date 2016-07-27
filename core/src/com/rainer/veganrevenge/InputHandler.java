@@ -3,10 +3,7 @@ package com.rainer.veganrevenge;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 
@@ -17,7 +14,7 @@ import java.util.ArrayList;
  */
 public class InputHandler implements InputProcessor {
 
-    private VeganGame game = null;
+    private Game game = null;
     private Camera cam = null;
 
     private PlayerController PC = PlayerController.getInstance();
@@ -42,7 +39,7 @@ public class InputHandler implements InputProcessor {
         return instance;
     }
 
-    public void set(VeganGame game, Camera cam){
+    public void set(Game game, Camera cam){
         this.game = game;
         this.cam = cam;
     }
@@ -82,10 +79,10 @@ public class InputHandler implements InputProcessor {
             @Override
             public boolean reportFixture(Fixture fixture) {
 
-                //fixture.getBody().setUserData();
+                if (fixture == null || fixture.getBody() == null)
+                    return true;
 
                 if (fixture.getBody().getUserData() instanceof GameObject){
-                    //Logger.log("derp");
                     GameObject obj = (GameObject)fixture.getBody().getUserData();
                     touchedObjects.add(obj);
                 }

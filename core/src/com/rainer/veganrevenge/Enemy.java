@@ -12,7 +12,7 @@ public class Enemy extends Character {
         super(world, position, spriteScale, bodyScale);
         this.tag = "ENEMY";
 
-        this.health = 50;
+        this.health = 30;
         this.damage = 15;
 
         this.jumpForce = 400;
@@ -20,7 +20,9 @@ public class Enemy extends Character {
         this.sensorRange = 8;
 
         addSensor(world, this.sensorRange, "SENSOR");
-        addSensor(world, this.getHeight() * 1.2f, "ENEMY_TOUCH");
+        addSensor(world, this.bodyRadius * 1.8f, "ENEMY_TOUCH");
+
+        setAnimationKeys("knight_attack", "knight_run", "knight_dead", "knight_jump", "knight_jumpAttack");
     }
 
     @Override
@@ -35,7 +37,8 @@ public class Enemy extends Character {
         super.update();
 
         if (this.health <= 0){
-            this.flagDelete = true;
+            //this.flagDelete = true;
+            actionDie();
         }
     }
 
@@ -43,12 +46,14 @@ public class Enemy extends Character {
     public void onSensorEnter(String sensorTag, Character other){
         super.onSensorEnter(sensorTag, other);
 
-        if (other.tag == "PLAYER"){
-            //Logger.log("PLAYER DETECTED");
-
+        if (sensorTag == "SENSOR" && other.tag == "PLAYER"){
             if (other.getY() > y && this.floorContact){
                 actionJump();
             }
+        }
+
+        if (sensorTag == "ENEMY_TOUCH" && other.tag == "PLAYER") {
+            actionAttack(other);
         }
     }
 

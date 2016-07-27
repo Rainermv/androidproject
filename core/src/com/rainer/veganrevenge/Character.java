@@ -27,6 +27,8 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Rainer on 09/06/2016.
@@ -41,7 +43,8 @@ public class Character extends AnimatedGameObject  {
 
     boolean floorContact = true;
 
-    float bodyScale = 0;
+    protected float bodyScale = 0;
+    protected float bodyRadius = 0;
 
     protected int health = 0;
     protected int damage = 0;
@@ -52,12 +55,27 @@ public class Character extends AnimatedGameObject  {
 
     private World worldReference;
 
+    private HashMap<String, String> animationKeys = new HashMap<String, String>();
+    private String animState = "";
+
+    public boolean flagDead = false;
+
     public int getHealth() {
         return health;
     }
-
     public int getDamage() {
         return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void addHealth(int health) {
+        if (health < 0){
+            this.flashTint(Color.RED, 0.1f, 0.1f);
+        }
+        this.health += health;
     }
 
     public Character (World world, Vector3 position, float spriteScale, float bodyScale){
@@ -75,10 +93,10 @@ public class Character extends AnimatedGameObject  {
 
         physicsBody = world.createBody(bodyDef);
 
-        //PolygonShape bodyShape = new PolygonShape();
-        //bodyShape.setAsBox(getWidth()/2 * body_scale.x,getHeight()/2 * body_scale.y);
         CircleShape shape = new CircleShape();
-        shape.setRadius(getHeight()/2 * bodyScale);
+
+        this.bodyRadius = getHeight()/2 * bodyScale;
+        shape.setRadius(this.bodyRadius);
 
         FixtureDef fixture = new FixtureDef();
         fixture.friction = 0;
@@ -86,15 +104,10 @@ public class Character extends AnimatedGameObject  {
         fixture.density = 0.33f;
         fixture.shape = shape;
 
-        //fixture.filter.categoryBits = 2; // cat 2 = personagens
-        //fixture.filter.maskBits = 1; // colide apenas com terreno (categoria 1)
-
         fixture.filter.categoryBits = CollisionCategory.CHARACTER.get();
         fixture.filter.maskBits = CollisionCategory.FLOOR.get();
 
         physicsBody.createFixture(fixture);
-
-        //physicsBody.getFixtureList().get(0).getShape().
 
         shape.dispose();
 
@@ -103,13 +116,36 @@ public class Character extends AnimatedGameObject  {
     }
 
     public void setFloorContact(boolean contact){
+
+        if (flagDead) return;
+
+        if (contact == false){
+            setAnimation("JUMP");
+        }
+        else{
+            setAnimation("RUN");
+        }
         this.floorContact = contact;
+    }
+
+    @Override
+    public void update(){
+
+        if (flagDead) return;
+
+        if (animState == "ATTACK" && isAnimationFinished()){
+            setAnimation("RUN");
+        }
     }
 
     @Override
     public void draw(SpriteBatch batch) {
 
-        setFlipped (physicsBody.getLinearVelocity().x < 0);
+        if (physicsBody.getLinearVelocity().x < 0)
+            setFlipped(true);
+        else if (physicsBody.getLinearVelocity().x > 0){
+            setFlipped(false);
+        }
 
         Vector2 pos = physicsBody.getPosition();
 
@@ -138,18 +174,68 @@ public class Character extends AnimatedGameObject  {
         sensorArray.add(new Sensor(new Vector3(this.x, this.y, 0),this.SCALE, range, this.bodyScale, world, this, tag));
     }
 
-    public void actionDamage(Character other){
+    public void actionAttack(Character other){
+        if (flagDead) return;
 
-        this.health -= other.getDamage();
-        this.flashTint(Color.RED, 0.1f, 0.1f);
+        other.addHealth(-getDamage());
+
+        if (this.floorContact){
+            setAnimation("ATTACK");
+        }
+        else{
+            setAnimation("JUMP_ATTACK");
+        }
     }
 
     protected void actionJump(){
+        if (flagDead) return;
+
         physicsBody.applyForceToCenter(0f, this.jumpForce, true);
     }
 
     protected void actionStartMoving(float mult){
+        if (flagDead) return;
+
         physicsBody.setLinearVelocity(mult * this.moveSpeed, 0);
+        setAnimation("RUN");
+    }
+
+    protected void actionDie(){
+        if (flagDead) return;
+
+        flagDead = true;
+        physicsBody.setLinearVelocity(0,0);
+        /*
+        worldReference.destroyBody(physicsBody);
+        for (Sensor sensor : sensorArray){
+            sensor.dispose();
+        }
+        */
+        setAnimation("DEAD");
+    }
+
+
+    protected void setAnimationKeys(String attack, String run, String dead, String jump, String jumpAttack){
+
+        animationKeys.clear();
+
+        animationKeys.put("ATTACK", attack);
+        animationKeys.put("RUN", run);
+        animationKeys.put("DEAD", dead);
+        animationKeys.put("JUMP", jump);
+        animationKeys.put("JUMP_ATTACK", jumpAttack);
+
+    }
+
+    @Override
+    public void setAnimation(String key){
+
+        String animationKey = animationKeys.get(key);
+        if (animationKey != null){
+            super.setAnimation(animationKey);
+            animState = key;
+        }
+
     }
 
     public void onSensorEnter(String sensorTag, Character other){
@@ -174,4 +260,9 @@ public class Character extends AnimatedGameObject  {
     }
 
 
+    public void disposeSensors() {
+        for (Sensor sensor : sensorArray){
+            sensor.dispose();
+        }
+    }
 }

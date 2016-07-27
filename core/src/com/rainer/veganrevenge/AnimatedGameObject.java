@@ -19,7 +19,7 @@ public class AnimatedGameObject extends GameObject {
 
     protected AnimationFactory animFactoryReference;
 
-    protected Animation animation;
+    private Animation animation;
     TextureRegion currentFrame;
 
     private float stateTime;
@@ -39,6 +39,11 @@ public class AnimatedGameObject extends GameObject {
         return width;
     }
 
+    public void setAnimation(String animationString) {
+        this.animation = animFactoryReference.getAnimation(animationString);
+        stateTime = 0f;
+    }
+
     private ColorTinter tinter = new ColorTinter();
 
     public AnimatedGameObject(Vector3 pos, float scale){
@@ -46,7 +51,7 @@ public class AnimatedGameObject extends GameObject {
         super(pos, scale);
 
         animFactoryReference = AnimationFactory.getInstance();
-        this.animation = animFactoryReference.getAnimation("knight_attack");
+        this.animation = animFactoryReference.getAnimation("knight_run");
 
         stateTime = 0f;
 
@@ -55,9 +60,14 @@ public class AnimatedGameObject extends GameObject {
     }
 
     public void updateAnimation(){
-        this.currentFrame = animation.getKeyFrame(stateTime, true);
+        //this.currentFrame = animation.getKeyFrame(stateTime, true);
+        this.currentFrame = animation.getKeyFrame(stateTime);
         width = currentFrame.getRegionWidth() * SCALE;
         height = currentFrame.getRegionHeight() * SCALE;
+    }
+
+    public boolean isAnimationFinished(){
+        return animation.isAnimationFinished(stateTime);
     }
 
     @Override

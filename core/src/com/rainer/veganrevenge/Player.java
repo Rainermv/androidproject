@@ -26,6 +26,14 @@ public class Player extends Character  {
         addSensor(world, this.getHeight() /2, "NEAR");
 
         this.healthBar = new Bar(new Vector3(0.05f,0.95f,0f), Color.GREEN, Color.RED, 0.6f, 0.05f, this.health,this.health);
+
+        setAnimationKeys("knight_attack", "knight_run", "knight_dead", "knight_jump", "knight_jumpAttack");
+    }
+
+    @Override
+    public void addHealth(int damage) {
+        super.addHealth(damage);
+        this.healthBar.updateValue((float)this.getHealth());
     }
 
     @Override
@@ -34,6 +42,16 @@ public class Player extends Character  {
         //physicsBody.setLinearVelocity(this.speed,0);
         actionStartMoving(1);
 
+    }
+
+    @Override
+    public void update(){
+        super.update();
+
+        if (this.health <= 0){
+            //this.flagDelete = true;
+            actionDie();
+        }
     }
 
     @Override
@@ -49,8 +67,8 @@ public class Player extends Character  {
 
         if (sensorTag == "NEAR" && other.tag == "ENEMY"){
 
-            this.actionDamage(other);
-            this.healthBar.updateValue((float)this.health);
+            //this.actionAttack(other);
+            //this.healthBar.updateValue((float)this.health);
         }
 
         if (sensorTag == "FAR" && other.tag == "ENEMY"){

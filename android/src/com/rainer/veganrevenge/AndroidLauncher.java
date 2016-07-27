@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.rainer.veganrevenge.VeganGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -16,6 +15,6 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useCompass = false;config.useAccelerometer = false;
 		config.useCompass = false;
 
-		initialize(new VeganGame(), config);
+		initialize(new Game(), config);
 	}
 }

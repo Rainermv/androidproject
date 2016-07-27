@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class VeganGame extends ApplicationAdapter{
+public class Game extends ApplicationAdapter{
 
 	private SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
@@ -42,8 +42,10 @@ public class VeganGame extends ApplicationAdapter{
 	final int BACKGROUND_IMAGES = 4;
 
 	final float SPAWN_OFFSET = 18;
-	float SPAWN_TIMER_START = 2;
-	float SPAWN_TIMER_END = 5;
+	float SPAWN_TIMER_START = 1f;
+	float SPAWN_TIMER_END = 3f;
+
+	final boolean DEBUG_DRAW = false;
 
 	Timer enemySpawner;
 
@@ -67,6 +69,8 @@ public class VeganGame extends ApplicationAdapter{
 	public Array<StaticGameObject> background = new Array<StaticGameObject>();
 	public Array<Character> characters = new Array<Character>();
 
+	final float ANIMATION_FPS = 1 / 15f;
+
 	//StaticGameObject bg1 = null;
 	//StaticGameObject bg2 = null;
 	
@@ -74,6 +78,8 @@ public class VeganGame extends ApplicationAdapter{
 	public void create () {
 
 		PC = PlayerController.getInstance();
+
+		AnimationFactory.getInstance().build(ANIMATION_FPS);
 
 		setUpBox2D();
 
@@ -173,29 +179,15 @@ public class VeganGame extends ApplicationAdapter{
 
 	}
 
-	/*
-	private void addSprites(String path) {
-		TextureAtlas textureAtlas = new TextureAtlas(path);
-		Array<AtlasRegion> regions = textureAtlas.getRegions();
-
-		for (AtlasRegion region : regions) {
-			Sprite sprite = textureAtlas.createSprite(region.name);
-
-			sprites.put(region.name, sprite);
-		}
-	}
-	*/
-
-
-
 	@Override
 	public void render () {
 
 		cameraFollow(PC.getPlayer());
 		camera.update();
 
-		this.loopWorld();
+		this.loopFixedUpdate();
 		this.loopUpdate();
+
 		this.loopRender();
 		this.loopCleanUp();
 
@@ -203,31 +195,12 @@ public class VeganGame extends ApplicationAdapter{
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		//camera.viewportWidth=width;
-		//camera.viewportHeight=height;
+
 		viewport.update(width, height, true);
 
 		batch.setProjectionMatrix(camera.combined);
 		camera.update();
 	}
-
-
-	@Override
-	public void dispose() {
-
-		for (StaticGameObject obj : background) {
-			obj.dispose();
-		}
-		for (GameObject obj : characters) {
-			obj.dispose();
-		}
-
-		world.dispose();
-		batch.dispose();
-		debugRenderer.dispose();
-	}
-
 
 	private void loopUpdate(){
 
@@ -239,15 +212,19 @@ public class VeganGame extends ApplicationAdapter{
 
 	}
 
-	private void loopWorld() {
-		float delta = Gdx.graphics.getDeltaTime();
+	private void loopFixedUpdate() {
 
+		float delta = Gdx.graphics.getDeltaTime();
 		accumulator += Math.min(delta, 0.25f);
 
 		if (accumulator >= STEP_TIME) {
 			accumulator -= STEP_TIME;
 
 			world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+			for (GameObject obj : characters) {
+				obj.fixedUpdate();
+			}
 		}
 	}
 
@@ -274,7 +251,8 @@ public class VeganGame extends ApplicationAdapter{
 		}
 		shapeRenderer.end();
 
-		debugRenderer.render(world, camera.combined);
+		if (DEBUG_DRAW)
+			debugRenderer.render(world, camera.combined);
 
 	}
 
@@ -284,14 +262,18 @@ public class VeganGame extends ApplicationAdapter{
 		while (i.hasNext()) {
 			Character character = i.next();
 
-			if (character.flagDelete){
+			if (character.flagDelete || character.getX() < camera.position.x - VIEWPORT_WIDTH){
+				if (character.tag == "PLAYER") continue;
 				character.dispose();
 				i.remove();
+				continue;
+			}
+
+			if (character.flagDead){
+				character.disposeSensors();
 			}
 		}
 	}
-
-
 
 	private void spawnEnemy(){
 
@@ -303,5 +285,20 @@ public class VeganGame extends ApplicationAdapter{
 	private void AddCharacter(Character c){
 		c.start();
 		characters.add(c);
+	}
+
+	@Override
+	public void dispose() {
+
+		for (StaticGameObject obj : background) {
+			obj.dispose();
+		}
+		for (GameObject obj : characters) {
+			obj.dispose();
+		}
+
+		world.dispose();
+		batch.dispose();
+		debugRenderer.dispose();
 	}
 }

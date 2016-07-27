@@ -46,7 +46,8 @@ public class PlayerController {
         }
 
         if (enemyTouched != null && closestSensor != null){
-            enemyTouched.actionDamage(this.playerAvatar);
+            playerAvatar.actionAttack(enemyTouched);
+            //enemyTouched.actionAttack(this.playerAvatar);
         }
         else{
             if (playerAvatar.floorContact == true) {

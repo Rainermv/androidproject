@@ -65,6 +65,10 @@ public class GameObject implements Disposable {
         // VIRTUAL
     }
 
+    public void fixedUpdate(){
+        // VIRTUAL
+    }
+
     public void draw(SpriteBatch batch){
         // VIRTUAL
     }
