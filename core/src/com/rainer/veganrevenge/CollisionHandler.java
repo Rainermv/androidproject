@@ -30,11 +30,11 @@ public class CollisionHandler implements ContactListener {
         GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
         GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
 
-        if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
-            ((Character)obja).setContact(true);
+        if ( obja instanceof Character && objb.tag == "FLOOR"){
+            ((Character)obja).setFloorContact(true);
         }
-        else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
-            ((Character)objb).setContact(true);
+        else if (obja.tag == "FLOOR" && objb instanceof Character){
+            ((Character)objb).setFloorContact(true);
         }
         if (obja instanceof Sensor && objb instanceof Character){
             ((Sensor)obja).enter((Character)objb);
@@ -50,11 +50,11 @@ public class CollisionHandler implements ContactListener {
         GameObject obja = (GameObject)contact.getFixtureA().getBody().getUserData();
         GameObject objb = (GameObject)contact.getFixtureB().getBody().getUserData();
 
-        if (obja.tag == "PLAYER" && objb.tag == "FLOOR"){
-            ((Character)obja).setContact(false);
+        if ( obja instanceof Character && objb.tag == "FLOOR"){
+            ((Character)obja).setFloorContact(false);
         }
-        else if (obja.tag == "FLOOR" && objb.tag == "PLAYER"){
-            ((Character)objb).setContact(false);
+        else if (obja.tag == "FLOOR" && objb instanceof Character){
+            ((Character)objb).setFloorContact(false);
         }
         if (obja instanceof Sensor && objb instanceof Character){
             ((Sensor)obja).exit((Character)objb);

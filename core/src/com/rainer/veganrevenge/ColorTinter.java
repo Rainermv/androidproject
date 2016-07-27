@@ -19,6 +19,8 @@ public class ColorTinter {
 
     private boolean active = false;
 
+    private boolean reset = false;
+
     public ColorTinter(){
     }
 
@@ -46,16 +48,31 @@ public class ColorTinter {
             coef = 1f - (float) (TimeUtils.nanoTime() - tintNanoseconds - n_colorIn) /
                     (float) n_colorOut; //interpolate again, but this time going from 1 down to 0
 
-            if (coef <= 0){
-                coef = 0;
-                this.active = false;
-            }
+
+        }
+
+        if(1f - (float) (TimeUtils.nanoTime() - tintNanoseconds - n_colorIn) /
+                (float) n_colorOut < 0){
+            coef = 0;
+            reset = true;
+        }
+    }
+
+    public void endStep(){
+
+        if (reset){
+            this.active = false;
+            reset = false;
         }
     }
 
     public Color getColor(){
 
-        return Color.WHITE.cpy().lerp(targetColor, coef);
+        if (coef > 0) {
+            return Color.WHITE.cpy().lerp(targetColor, coef);
+        }
+        else
+            return Color.WHITE;
     }
 
     public boolean isActive(){

@@ -12,7 +12,7 @@ public class Enemy extends Character {
         super(world, position, spriteScale, bodyScale);
         this.tag = "ENEMY";
 
-        this.health = 10;
+        this.health = 50;
         this.damage = 15;
 
         this.jumpForce = 400;
@@ -20,15 +20,23 @@ public class Enemy extends Character {
         this.sensorRange = 8;
 
         addSensor(world, this.sensorRange, "SENSOR");
-        addSensor(world, this.getHeight() * 1.2f, "HIT");
+        addSensor(world, this.getHeight() * 1.2f, "ENEMY_TOUCH");
     }
 
     @Override
     public void start(){
+        super.start();
 
-        startMoving(-1);
-        //physicsBody.setLinearVelocity(-this.speed,0);
+        actionStartMoving(-1);
+    }
 
+    @Override
+    public void update(){
+        super.update();
+
+        if (this.health <= 0){
+            this.flagDelete = true;
+        }
     }
 
     @Override
@@ -39,7 +47,7 @@ public class Enemy extends Character {
             //Logger.log("PLAYER DETECTED");
 
             if (other.getY() > y && this.floorContact){
-                jump();
+                actionJump();
             }
         }
     }

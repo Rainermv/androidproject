@@ -15,7 +15,11 @@ public class Sensor extends GameObject {
     Body sensorBody;
     Character parent;
 
+    float range = 0;
+
     float bodyScale = 0;
+
+    private World worldReference;
 
     public Sensor(Vector3 position, float scale, float range, float bodyScale, World world, Character parent, String tag) {
         super(position, scale);
@@ -23,6 +27,9 @@ public class Sensor extends GameObject {
         //this.tag = "SENSOR";
         this.tag = tag;
         this.parent = parent;
+        this.range = range;
+
+        this.worldReference = world;
 
         setUpSensor(world, bodyScale, range);
 
@@ -68,5 +75,12 @@ public class Sensor extends GameObject {
 
     public void exit(Character other){
         parent.onSensorExit(this.tag, other);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        worldReference.destroyBody(this.sensorBody);
     }
 }

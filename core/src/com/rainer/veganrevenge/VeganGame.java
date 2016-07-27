@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class VeganGame extends ApplicationAdapter{
 
@@ -61,7 +62,7 @@ public class VeganGame extends ApplicationAdapter{
 	static final int POSITION_ITERATIONS = 2;
 	float accumulator = 0;
 
-	public Player thePlayer;
+	public PlayerController PC;
 
 	public Array<StaticGameObject> background = new Array<StaticGameObject>();
 	public Array<Character> characters = new Array<Character>();
@@ -71,6 +72,8 @@ public class VeganGame extends ApplicationAdapter{
 	
 	@Override
 	public void create () {
+
+		PC = PlayerController.getInstance();
 
 		setUpBox2D();
 
@@ -90,12 +93,12 @@ public class VeganGame extends ApplicationAdapter{
 		static_textures.put("background", new Texture("sprites/bg.png"));
 		//addSprites("sprites/bg.png");
 
-		thePlayer = new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE);
+		PC.setPlayer(new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
 
 		setUpBackground();
 		scheduleSpawnTimer();
 
-		AddCharacter(thePlayer);
+		AddCharacter(PC.getPlayer());
 
 		world.setContactListener(contactListener);
 
@@ -188,47 +191,13 @@ public class VeganGame extends ApplicationAdapter{
 	@Override
 	public void render () {
 
-		cameraFollow(thePlayer);
+		cameraFollow(PC.getPlayer());
 		camera.update();
 
-		/*
-		if(Gdx.input.isTouched()) {
-			//Vector3 touchPos = new Vector3();
-			this.touch_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(this.touch_position);
-
-			for (GameObject obj : characters) {
-				obj.onScreenTouch(touch_position);
-			}
-		}
-		*/
-
-		stepWorld();
-
-		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		updateBackground(thePlayer);
-
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		for (GameObject obj : background){
-			obj.draw(batch);
-		}
-		for (GameObject obj : characters){
-			obj.draw(batch);
-		}
-		batch.end();
-
-
-		batch.setProjectionMatrix(camera.projection);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		for (GameObject obj : characters){
-			obj.drawUI(shapeRenderer, camera);
-		}
-		shapeRenderer.end();
-
-		debugRenderer.render(world, camera.combined);
+		this.loopWorld();
+		this.loopUpdate();
+		this.loopRender();
+		this.loopCleanUp();
 
 	}
 
@@ -259,7 +228,18 @@ public class VeganGame extends ApplicationAdapter{
 		debugRenderer.dispose();
 	}
 
-	private void stepWorld() {
+
+	private void loopUpdate(){
+
+		updateBackground(PC.getPlayer());
+
+		for (GameObject obj : characters) {
+			obj.update();
+		}
+
+	}
+
+	private void loopWorld() {
 		float delta = Gdx.graphics.getDeltaTime();
 
 		accumulator += Math.min(delta, 0.25f);
@@ -271,9 +251,51 @@ public class VeganGame extends ApplicationAdapter{
 		}
 	}
 
+	private void loopRender(){
+
+		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		for (GameObject obj : background){
+			obj.draw(batch);
+		}
+		for (GameObject obj : characters){
+			obj.draw(batch);
+		}
+		batch.end();
+
+		batch.setProjectionMatrix(camera.projection);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+		for (GameObject obj : characters){
+			obj.drawUI(shapeRenderer, camera);
+		}
+		shapeRenderer.end();
+
+		debugRenderer.render(world, camera.combined);
+
+	}
+
+	private void loopCleanUp(){
+
+		Iterator<Character> i = characters.iterator();
+		while (i.hasNext()) {
+			Character character = i.next();
+
+			if (character.flagDelete){
+				character.dispose();
+				i.remove();
+			}
+		}
+	}
+
+
+
 	private void spawnEnemy(){
 
-		Vector3 position = new Vector3(thePlayer.getX() + SPAWN_OFFSET, FLOOR_HEIGHT, 0);
+		Vector3 position = new Vector3(PC.getPlayer().getX() + SPAWN_OFFSET, FLOOR_HEIGHT, 0);
 		AddCharacter(new Enemy(world, position, CHARSCALE, BODYSCALE));
 
 	}

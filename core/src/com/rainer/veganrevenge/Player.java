@@ -2,9 +2,7 @@ package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -18,7 +16,7 @@ public class Player extends Character  {
         this.tag = "PLAYER";
 
         this.health = 100;
-        this.damage = 20;
+        this.damage = 10;
 
         this.jumpForce = 400;
         this.moveSpeed = 5;
@@ -31,22 +29,10 @@ public class Player extends Character  {
     }
 
     @Override
-    public void onScreenTouch(Vector3 touch_position) {
-
-        super.onScreenTouch(touch_position);
-
-        if (this.floorContact == true) {
-            jump();
-            //physicsBody.applyForceToCenter(0f, this.jump_force, true);
-            //physicsBody.setLinearVelocity(this.speed, 0);
-        }
-    }
-
-    @Override
     public void start(){
 
         //physicsBody.setLinearVelocity(this.speed,0);
-        startMoving(1);
+        actionStartMoving(1);
 
     }
 
@@ -63,9 +49,7 @@ public class Player extends Character  {
 
         if (sensorTag == "NEAR" && other.tag == "ENEMY"){
 
-            this.flashTint(Color.RED, 0.8f, 0.3f);
-
-            this.health -= 10;
+            this.actionDamage(other);
             this.healthBar.updateValue((float)this.health);
         }
 

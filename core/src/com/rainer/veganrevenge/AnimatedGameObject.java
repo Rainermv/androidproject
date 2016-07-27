@@ -86,12 +86,14 @@ public class AnimatedGameObject extends GameObject {
         if (tinter.isActive()){
             batch.setColor(Color.WHITE);
         }
+
+        tinter.endStep();
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        this.currentFrame.getTexture().dispose();
+        //this.currentFrame.getTexture().dispose();
     }
 
     public void flashTint(Color color, float colorIn, float colorOut){

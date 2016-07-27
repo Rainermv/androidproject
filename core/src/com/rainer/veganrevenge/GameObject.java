@@ -25,6 +25,8 @@ public class GameObject implements Disposable {
 
     public float SCALE;
 
+    public boolean flagDelete = false;
+
     public GameObject(Vector3 position, float scale){
         //this.rect = rectangle;
         //this.scale = scale;
@@ -59,6 +61,10 @@ public class GameObject implements Disposable {
         return this.y;
     }
 
+    public void update(){
+        // VIRTUAL
+    }
+
     public void draw(SpriteBatch batch){
         // VIRTUAL
     }
@@ -68,10 +74,6 @@ public class GameObject implements Disposable {
     }
 
     public void start(){
-        // VIRTUAL
-    }
-
-    public void onScreenTouch(Vector3 touch_position){
         // VIRTUAL
     }
 

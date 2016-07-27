@@ -50,6 +50,8 @@ public class Character extends AnimatedGameObject  {
     protected float jumpForce = 0;
     protected float sensorRange = 0;
 
+    private World worldReference;
+
     public int getHealth() {
         return health;
     }
@@ -64,6 +66,7 @@ public class Character extends AnimatedGameObject  {
 
         this.tag = "PLAYER";
         this.bodyScale = bodyScale;
+        this.worldReference = world;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -99,9 +102,8 @@ public class Character extends AnimatedGameObject  {
 
     }
 
-    protected void addSensor(World world, float range, String tag){
-
-        sensorArray.add(new Sensor(new Vector3(this.x, this.y, 0),this.SCALE, range, this.bodyScale, world, this, tag));
+    public void setFloorContact(boolean contact){
+        this.floorContact = contact;
     }
 
     @Override
@@ -120,6 +122,8 @@ public class Character extends AnimatedGameObject  {
         }
 
     }
+
+
     @Override
     public void drawUI(ShapeRenderer renderer, Camera cam) {
         super.drawUI(renderer, cam);
@@ -129,24 +133,22 @@ public class Character extends AnimatedGameObject  {
         }
     }
 
+    protected void addSensor(World world, float range, String tag){
 
-    @Override
-    public void onScreenTouch(Vector3 touch_position) {
-
-
+        sensorArray.add(new Sensor(new Vector3(this.x, this.y, 0),this.SCALE, range, this.bodyScale, world, this, tag));
     }
 
-    public void setContact(boolean contact){
-        this.floorContact = contact;
+    public void actionDamage(Character other){
 
-        Logger.log("floor contact: " + this.floorContact);
+        this.health -= other.getDamage();
+        this.flashTint(Color.RED, 0.1f, 0.1f);
     }
 
-    protected void jump(){
+    protected void actionJump(){
         physicsBody.applyForceToCenter(0f, this.jumpForce, true);
     }
 
-    protected void startMoving(float mult){
+    protected void actionStartMoving(float mult){
         physicsBody.setLinearVelocity(mult * this.moveSpeed, 0);
     }
 
@@ -158,7 +160,16 @@ public class Character extends AnimatedGameObject  {
         // VIRTUAL
     }
 
-    public void isTouched(ArrayList<Character> touchedCharacters){
+
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        for (Sensor sensor : sensorArray){
+            sensor.dispose();
+        }
+
+        worldReference.destroyBody(this.physicsBody);
 
     }
 
