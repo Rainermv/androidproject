@@ -39,7 +39,7 @@ public class Game extends ApplicationAdapter{
 
 	final float GRAVITY = -15;
 
-	final int BACKGROUND_IMAGES = 4;
+	final int BACKGROUND_IMAGES = 3;
 
 	final float SPAWN_OFFSET = 18;
 	float SPAWN_TIMER_START = 1f;
@@ -55,7 +55,7 @@ public class Game extends ApplicationAdapter{
 
 	final HashMap<String, Texture> static_textures = new HashMap<String, Texture>();
 	private Floor theFloor;
-	final float FLOOR_HEIGHT = 2f;
+	final float FLOOR_HEIGHT = 2.5f;
 
 	World world;
 	Box2DDebugRenderer debugRenderer;
@@ -96,7 +96,9 @@ public class Game extends ApplicationAdapter{
 		viewport = new ExtendViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
 
 		//addSprites("spritesheets/knight.txt"); // add background
-		static_textures.put("background", new Texture("sprites/bg.png"));
+		//static_textures.put("background", new Texture("sprites/bg.png"));
+		static_textures.put("background", new Texture("sprites/ground.png"));
+		static_textures.put("background2", new Texture("sprites/trees.png"));
 		//addSprites("sprites/bg.png");
 
 		PC.setPlayer(new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
@@ -115,7 +117,7 @@ public class Game extends ApplicationAdapter{
 	private void setUpBackground(){
 
 		for (int i = 0; i < BACKGROUND_IMAGES; i++){
-			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), CHARSCALE * 2));
+			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), CHARSCALE * 4.5f));
 		}
 
 		float terrain_width = background.get(0).getWidth();

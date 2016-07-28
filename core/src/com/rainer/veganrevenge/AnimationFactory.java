@@ -53,6 +53,14 @@ public class AnimationFactory {
         storeAnimation("knight_jump",       "Jump",      1,  5, knight, Animation.PlayMode.NORMAL);
         storeAnimation("knight_jumpAttack", "JumpAttack",5, 10, knight, Animation.PlayMode.NORMAL);
 
+        TextureAtlas robot = new TextureAtlas(Gdx.files.internal("spritesheets/robot1.txt"));
+
+        storeAnimation("robot_attack",     "Melee",    1,  8, robot, Animation.PlayMode.NORMAL);
+        storeAnimation("robot_run",        "Run",       1,   8, robot, Animation.PlayMode.LOOP);
+        storeAnimation("robot_dead",       "Dead",      1,  10, robot, Animation.PlayMode.NORMAL);
+        storeAnimation("robot_jump",       "Jump",      1,  10, robot, Animation.PlayMode.NORMAL);
+        storeAnimation("robot_jumpAttack", "JumpMelee",1, 8, robot, Animation.PlayMode.NORMAL);
+
     }
 
     private void storeAnimation(String animationKey, String name, int first, int last, TextureAtlas textureAtlas, Animation.PlayMode mode){
@@ -64,6 +72,8 @@ public class AnimationFactory {
             Logger.log(frameName);
             frames.add(textureAtlas.findRegion(frameName));
         }
+
+
 
         Animation anim = new Animation(fps, frames);
         anim.setPlayMode(mode);
