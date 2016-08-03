@@ -1,0 +1,33 @@
+buttons.png
+size: 700, 330
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ButtonBig (1)
+  rotate: false
+  xy: 0, 0
+  size: 350, 165
+  orig: 350, 165
+  offset: 0, 0
+  index: -1
+ButtonBig (2)
+  rotate: false
+  xy: 350, 0
+  size: 350, 165
+  orig: 350, 165
+  offset: 0, 0
+  index: -1
+ButtonBig (3)
+  rotate: false
+  xy: 0, 165
+  size: 350, 165
+  orig: 350, 165
+  offset: 0, 0
+  index: -1
+ButtonBig (4)
+  rotate: false
+  xy: 350, 165
+  size: 350, 165
+  orig: 350, 165
+  offset: 0, 0
+  index: -1

@@ -79,6 +79,10 @@ public class ScreenGameplay implements Screen {
 
     public ScreenGameplay(GameMain gameMain){
         this.gameMain = gameMain;
+    }
+
+    @Override
+    public void show() {
 
         PC = PlayerController.getInstance();
 
@@ -124,9 +128,6 @@ public class ScreenGameplay implements Screen {
 
         inputHandler.set(this, camera);
         Gdx.input.setInputProcessor(inputHandler);
-
-
-
 
     }
 
@@ -283,10 +284,7 @@ public class ScreenGameplay implements Screen {
         debugRenderer.dispose();
     }
 
-    @Override
-    public void show() {
 
-    }
 
 
     @Override
