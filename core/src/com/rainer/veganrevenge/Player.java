@@ -19,7 +19,7 @@ public class Player extends Character  {
         this.damage = 10;
 
         this.jumpForce = 400;
-        this.moveSpeed = 5;
+        this.moveSpeed = 50;
         this.sensorRange = 5;
 
         addSensor(world, this.sensorRange, "FAR");

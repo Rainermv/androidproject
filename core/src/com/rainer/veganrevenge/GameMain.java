@@ -18,14 +18,19 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.Game;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Game extends ApplicationAdapter{
 
+public class GameMain extends Game{
+
+	ScreenGameplay screenGameplay;
+
+	/*
 	private SpriteBatch batch;
-	public ShapeRenderer shapeRenderer;
+	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 	private ExtendViewport viewport;
 
@@ -42,8 +47,8 @@ public class Game extends ApplicationAdapter{
 	final int BACKGROUND_IMAGES = 3;
 
 	final float SPAWN_OFFSET = 18;
-	float SPAWN_TIMER_START = 1f;
-	float SPAWN_TIMER_END = 3f;
+	float SPAWN_TIMER_START = 99f;
+	float SPAWN_TIMER_END = 100f;
 
 	final boolean DEBUG_DRAW = false;
 
@@ -66,16 +71,19 @@ public class Game extends ApplicationAdapter{
 
 	public PlayerController PC;
 
-	public Array<StaticGameObject> background = new Array<StaticGameObject>();
+	//public Array<StaticGameObject> background = new Array<StaticGameObject>();
 	public Array<Character> characters = new Array<Character>();
+
+	public ParallaxBackground parallaxBackground = null;
 
 	final float ANIMATION_FPS = 1 / 15f;
 
-	//StaticGameObject bg1 = null;
-	//StaticGameObject bg2 = null;
+	*/
 	
 	@Override
 	public void create () {
+
+		/*
 
 		PC = PlayerController.getInstance();
 
@@ -97,13 +105,22 @@ public class Game extends ApplicationAdapter{
 
 		//addSprites("spritesheets/knight.txt"); // add background
 		//static_textures.put("background", new Texture("sprites/bg.png"));
-		static_textures.put("background", new Texture("sprites/ground.png"));
-		static_textures.put("background2", new Texture("sprites/trees.png"));
+		static_textures.put("ground", new Texture("sprites/ground.png"));
+		static_textures.put("treeline", new Texture("sprites/trees.png"));
+		static_textures.put("backdrop", new Texture("sprites/background.png"));
 		//addSprites("sprites/bg.png");
 
 		PC.setPlayer(new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
 
-		setUpBackground();
+		parallaxBackground = new ParallaxBackground(new Vector3(0,0,0),
+				static_textures.get("backdrop"),
+				static_textures.get("treeline"),
+				static_textures.get("ground"),
+				CHARSCALE * 6f, CHARSCALE * 5.5f, CHARSCALE * 4.5f);
+
+		parallaxBackground.adjustLayerPosY(0,-4f);
+		parallaxBackground.adjustLayerPosY(1,3.5f);
+
 		scheduleSpawnTimer();
 
 		AddCharacter(PC.getPlayer());
@@ -112,22 +129,14 @@ public class Game extends ApplicationAdapter{
 
 		inputHandler.set(this, camera);
 		Gdx.input.setInputProcessor(inputHandler);
+
+		screenGameplay = new ScreenGameplay(this);
+
+		*/
+		screenGameplay = new ScreenGameplay(this);
+		setScreen(screenGameplay);
 	}
-
-	private void setUpBackground(){
-
-		for (int i = 0; i < BACKGROUND_IMAGES; i++){
-			background.add(new StaticGameObject(new Vector3(0,0,0),static_textures.get("background"), CHARSCALE * 4.5f));
-		}
-
-		float terrain_width = background.get(0).getWidth();
-		for (int i = 0; i < BACKGROUND_IMAGES; i++){
-
-			background.get(i).updatePosition(new Vector3(terrain_width * (i -1),0,0));
-
-		}
-	}
-
+	/*
 	private void cameraFollow(GameObject target){
 
 		camera.position.x = target.getX() + CAMERA_OFFSET;
@@ -149,27 +158,6 @@ public class Game extends ApplicationAdapter{
 
 	}
 
-	private void updateBackground(GameObject target){
-
-		float x = target.getX();
-
-		for (GameObject obj : background) {
-
-			StaticGameObject bg =(StaticGameObject)obj;
-			float translate_point = bg.x + bg.getWidth() + (background.size/2 ) * bg.getWidth();
-
-			if (x  > translate_point){
-				bg.translate(bg.getWidth()* background.size,0);
-
-				Logger.log("player pos: " + x);
-
-				theFloor.extend(bg.getWidth());
-
-				break;
-			}
-		}
-	}
-
 	private void setUpBox2D(){
 
 		// Inicializa Box2D e cria novo "world"
@@ -180,33 +168,37 @@ public class Game extends ApplicationAdapter{
 		theFloor = new Floor(world, 10000000000000000f, FLOOR_HEIGHT, CHARSCALE);
 
 	}
-
+	*/
 	@Override
 	public void render () {
 
+		super.render();
+		/*
 		cameraFollow(PC.getPlayer());
 		camera.update();
 
 		this.loopFixedUpdate();
 		this.loopUpdate();
 
-		this.loopRender();
+		this.loopDraw();
 		this.loopCleanUp();
-
+		*/
 	}
 
 	@Override
 	public void resize(int width, int height) {
-
+		super.resize(width, height);
+		/*
 		viewport.update(width, height, true);
 
 		batch.setProjectionMatrix(camera.combined);
 		camera.update();
+		*/
 	}
-
+	/*
 	private void loopUpdate(){
 
-		updateBackground(PC.getPlayer());
+		parallaxBackground.update(PC.getPlayer().getX());
 
 		for (GameObject obj : characters) {
 			obj.update();
@@ -230,16 +222,16 @@ public class Game extends ApplicationAdapter{
 		}
 	}
 
-	private void loopRender(){
+	private void loopDraw(){
 
 		Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		for (GameObject obj : background){
-			obj.draw(batch);
-		}
+
+		parallaxBackground.draw(batch);
+
 		for (GameObject obj : characters){
 			obj.draw(batch);
 		}
@@ -288,19 +280,19 @@ public class Game extends ApplicationAdapter{
 		c.start();
 		characters.add(c);
 	}
-
+	*/
 	@Override
 	public void dispose() {
-
-		for (StaticGameObject obj : background) {
-			obj.dispose();
-		}
+		super.dispose();
+		/*
 		for (GameObject obj : characters) {
 			obj.dispose();
 		}
 
+		parallaxBackground.dispose();
 		world.dispose();
 		batch.dispose();
 		debugRenderer.dispose();
+		*/
 	}
 }

@@ -69,11 +69,9 @@ public class AnimationFactory {
 
         for (int i = first; i <= last; i++){
             String frameName = name + " (" + i + ")";
-            Logger.log(frameName);
+            //Logger.log(frameName);
             frames.add(textureAtlas.findRegion(frameName));
         }
-
-
 
         Animation anim = new Animation(fps, frames);
         anim.setPlayMode(mode);

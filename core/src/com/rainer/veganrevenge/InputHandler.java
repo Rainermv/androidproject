@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class InputHandler implements InputProcessor {
 
-    private Game game = null;
+    private ScreenGameplay gameScene = null;
     private Camera cam = null;
 
     private PlayerController PC = PlayerController.getInstance();
@@ -39,8 +39,8 @@ public class InputHandler implements InputProcessor {
         return instance;
     }
 
-    public void set(Game game, Camera cam){
-        this.game = game;
+    public void set(ScreenGameplay gameScene, Camera cam){
+        this.gameScene = gameScene;
         this.cam = cam;
     }
 
@@ -92,7 +92,7 @@ public class InputHandler implements InputProcessor {
 
         };
 
-        game.world.QueryAABB(queryCallback, x1, y1, x2, y2);
+        gameScene.world.QueryAABB(queryCallback, x1, y1, x2, y2);
 
         PC.touch(touchedObjects);
 
