@@ -11,21 +11,22 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Player extends Character  {
 
+    PlayerController PC;
+
     public Player(World world, Vector3 position, float spriteScale, float bodyScale) {
         super(world, position, spriteScale, bodyScale);
+
         this.tag = "PLAYER";
 
         this.health = 100;
         this.damage = 10;
 
         this.jumpForce = 400;
-        this.moveSpeed = 50;
+        this.moveSpeed = 5;
         this.sensorRange = 5;
 
         addSensor(world, this.sensorRange, "FAR");
         addSensor(world, this.getHeight() /2, "NEAR");
-
-        this.healthBar = new Bar(new Vector3(0.05f,0.95f,0f), Color.GREEN, Color.RED, 0.6f, 0.05f, this.health,this.health);
 
         setAnimationKeys("knight_attack", "knight_run", "knight_dead", "knight_jump", "knight_jumpAttack");
     }
@@ -33,7 +34,7 @@ public class Player extends Character  {
     @Override
     public void addHealth(int damage) {
         super.addHealth(damage);
-        this.healthBar.updateValue((float)this.getHealth());
+        //this.healthBar.updateValue((float)this.getHealth());
     }
 
     @Override

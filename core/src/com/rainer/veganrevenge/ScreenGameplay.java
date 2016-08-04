@@ -3,6 +3,7 @@ package com.rainer.veganrevenge;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,8 +36,8 @@ public class ScreenGameplay implements Screen {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
-    final float VIEWPORT_WIDTH = 20;//80;//40;
-    final float VIEWPORT_HEIGHT = 12;//50;//25;
+    final float VIEWPORT_WIDTH = 15;//20;//80;//40;
+    final float VIEWPORT_HEIGHT = 9;//12;//50;//25;
 
     final float CAMERA_OFFSET = 7;
 
@@ -45,9 +46,9 @@ public class ScreenGameplay implements Screen {
 
     final float GRAVITY = -15;
 
-    final float SPAWN_OFFSET = 18;
-    float SPAWN_TIMER_START = 99f;
-    float SPAWN_TIMER_END = 100f;
+    final float SPAWN_OFFSET = 10;
+    float SPAWN_TIMER_START = 2f;
+    float SPAWN_TIMER_END = 5f;
 
     final boolean DEBUG_DRAW = false;
 
@@ -59,7 +60,7 @@ public class ScreenGameplay implements Screen {
 
     final HashMap<String, Texture> static_textures = new HashMap<String, Texture>();
     private Floor theFloor;
-    final float FLOOR_HEIGHT = 2.5f;
+    final float FLOOR_HEIGHT = 1.5f;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -76,6 +77,7 @@ public class ScreenGameplay implements Screen {
     public ParallaxBackground parallaxBackground = null;
 
     final float ANIMATION_FPS = 1 / 15f;
+    private Bar healthBar;
 
     public ScreenGameplay(GameMain gameMain){
         this.gameMain = gameMain;
@@ -109,7 +111,8 @@ public class ScreenGameplay implements Screen {
         static_textures.put("backdrop", new Texture("sprites/background.png"));
         //addSprites("sprites/bg.png");
 
-        PC.setPlayer(new Player(world, new Vector3(5, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
+        PC.setPlayer(new Player(world, new Vector3(VIEWPORT_WIDTH * 0.2f, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE, PC));
+        AddCharacter(PC.getPlayer());
 
         parallaxBackground = new ParallaxBackground(new Vector3(0,0,0),
                 static_textures.get("backdrop"),
@@ -117,17 +120,19 @@ public class ScreenGameplay implements Screen {
                 static_textures.get("ground"),
                 CHARSCALE * 6f, CHARSCALE * 5.5f, CHARSCALE * 4.5f);
 
-        parallaxBackground.adjustLayerPosY(0,-4f);
-        parallaxBackground.adjustLayerPosY(1,3.5f);
+        parallaxBackground.adjustLayerPosY(0,-8.5f);
+        parallaxBackground.adjustLayerPosY(1,0.5f);
+        parallaxBackground.adjustLayerPosY(2,FLOOR_HEIGHT -2.5f);
 
         scheduleSpawnTimer();
-
-        AddCharacter(PC.getPlayer());
 
         world.setContactListener(contactListener);
 
         inputHandler.set(this, camera);
         Gdx.input.setInputProcessor(inputHandler);
+
+        this.healthBar = new Bar(new Vector3(VIEWPORT_WIDTH * 0.1f,VIEWPORT_HEIGHT * 0.8f,0f),
+                Color.GREEN, Color.RED, VIEWPORT_WIDTH * 0.6f, VIEWPORT_HEIGHT * 0.05f, PC.getPlayer().health,PC.getPlayer().health);
 
     }
 
@@ -194,6 +199,8 @@ public class ScreenGameplay implements Screen {
             obj.update();
         }
 
+        healthBar.updateValue(PC.getPlayer().health);
+
     }
 
     private void loopFixedUpdate() {
@@ -231,8 +238,9 @@ public class ScreenGameplay implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         for (GameObject obj : characters){
-            obj.drawUI(shapeRenderer, camera);
+            obj.drawUI(shapeRenderer);
         }
+        healthBar.drawUI(shapeRenderer);
         shapeRenderer.end();
 
         if (DEBUG_DRAW)
@@ -261,7 +269,7 @@ public class ScreenGameplay implements Screen {
 
     private void spawnEnemy(){
 
-        Vector3 position = new Vector3(PC.getPlayer().getX() + SPAWN_OFFSET, FLOOR_HEIGHT, 0);
+        Vector3 position = new Vector3(PC.getPlayer().getX() + VIEWPORT_WIDTH * 1.1f, FLOOR_HEIGHT, 0);
         AddCharacter(new Enemy(world, position, CHARSCALE, BODYSCALE));
 
     }

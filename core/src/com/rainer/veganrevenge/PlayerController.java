@@ -1,5 +1,10 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
+
 import java.util.ArrayList;
 
 /**
@@ -16,6 +21,7 @@ public class PlayerController {
     }
 
     private PlayerController() {
+
     }
 
     public Player getPlayer() {
@@ -24,6 +30,7 @@ public class PlayerController {
 
     public void setPlayer(Player playerAvatar) {
         this.playerAvatar = playerAvatar;
+
     }
 
     public void touch( ArrayList<GameObject> touchedObjects){

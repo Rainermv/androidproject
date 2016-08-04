@@ -13,8 +13,8 @@ public class ParallaxBackground extends GameObject{
     final int BACKGROUND_SIZE = 3;
     //final float SCALE_MULT = 4.5f;
 
-    final float BACKDROP_SPEED_MULT = 0.8f;
-    final float TREELINE_SPEED_MULT = 0.5f;
+    final float BACKDROP_SPEED_MULT = 0.98f;
+    final float TREELINE_SPEED_MULT = 0.6f;
     final float GROUND_SPEED_MULT = 0f;
 
     float backdropWidth;

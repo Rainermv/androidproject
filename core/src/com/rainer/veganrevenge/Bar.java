@@ -56,21 +56,24 @@ public class Bar extends GameObject {
     }
 
     @Override
-    public void drawUI(ShapeRenderer renderer, Camera cam){
+    public void drawUI(ShapeRenderer renderer){
 
-        float viewWidth = Gdx.app.getGraphics().getWidth();
-        float viewHeight = Gdx.app.getGraphics().getHeight();
+        //float viewWidth = Gdx.app.getGraphics().getWidth();
+        //float viewHeight = Gdx.app.getGraphics().getHeight();
 
         float mult = this.value / this.maxValue;
 
         //Logger.log(viewHeight + " * "+ y + "=" + y *viewHeight);
 
         renderer.setColor(bgColor);
-        renderer.rect(x *viewWidth, y *viewHeight, width *viewWidth, height *viewHeight );
+        renderer.rect(x, y, width, height );
+        //renderer.rect( *viewWidth, y *viewHeight, width *viewWidth, height *viewHeight );
+        //renderer.rect(0, 0,viewWidth, 10 );
 
         if (mult >= 0) {
             renderer.setColor(drawColor);
-            renderer.rect(x * viewWidth, y * viewHeight, width * viewWidth * mult, height * viewHeight);
+            //renderer.rect(x * viewWidth, y * viewHeight, width * viewWidth * mult, height * viewHeight);
+            //renderer.rect(x * viewWidth, y * viewHeight, width * viewWidth * mult, height * viewHeight);
         }
 
 

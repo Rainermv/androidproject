@@ -73,7 +73,7 @@ public class GameObject implements Disposable {
         // VIRTUAL
     }
 
-    public void drawUI(ShapeRenderer renderer, Camera cam){
+    public void drawUI(ShapeRenderer renderer){
         // VIRTUAL
     }
 

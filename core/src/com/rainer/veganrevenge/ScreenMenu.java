@@ -2,6 +2,7 @@ package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -64,8 +66,8 @@ public class ScreenMenu implements Screen {
         Image background = new Image(new Texture(Gdx.files.internal("sprites/bg.png")));
         Image window = new Image(new Texture(Gdx.files.internal("sprites/Window.png")));
 
-        window.setHeight(window.getHeight()* 0.7f); //** Button Height **//
-        window.setWidth(window.getWidth()* 0.7f); //** Button Width **//
+        window.setHeight(window.getHeight()* 0.4f);
+        window.setWidth(window.getWidth()* 0.4f);
         window.setPosition(VIEWPORT_WIDTH/2 - window.getWidth()/2 , VIEWPORT_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
 
         buttonAtlas = new TextureAtlas(Gdx.files.internal("spritesheets/buttons.txt"));
@@ -73,16 +75,28 @@ public class ScreenMenu implements Screen {
         buttonSkin = new Skin();
         buttonSkin.addRegions(buttonAtlas); //** skins for on and off **//
 
+        BitmapFont titleFont = new BitmapFont();
+        titleFont.getData().setScale(3f, 3f);
+
+        Label.LabelStyle titleStyle = new Label.LabelStyle();
+        titleStyle.font = titleFont;
+        titleStyle.fontColor = Color.GOLD;
+
+        Label title = new Label("Sir Knight vs. the Robots", titleStyle);
+        title.setPosition(VIEWPORT_WIDTH/2 - title.getWidth()/2 , VIEWPORT_HEIGHT * 0.8f - title.getHeight()/2);
+
         font = new BitmapFont();
-        font.getData().setScale(2, 2);
+        font.getData().setScale(1.2f, 1.2f);
+
+
 
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); //** Button properties **//
         style.up = buttonSkin.getDrawable("ButtonBig (4)");
         style.down = buttonSkin.getDrawable("ButtonBig (2)");
         style.font = font;
 
-        float height = buttonAtlas.findRegion("ButtonBig (4)").getTexture().getHeight()/2;
-        float width = buttonAtlas.findRegion("ButtonBig (4)").getTexture().getWidth()/2;
+        float height = buttonAtlas.findRegion("ButtonBig (4)").getTexture().getHeight() * 0.2f;
+        float width = buttonAtlas.findRegion("ButtonBig (4)").getTexture().getWidth() *0.2f;
 
         buttonStartGame = new TextButton("NEW GAME", style); //** Button text and style **//
         buttonStartGame.setPosition(VIEWPORT_WIDTH/2 - width/2 , VIEWPORT_HEIGHT/2f - height/2); //** Button location **//
@@ -102,6 +116,7 @@ public class ScreenMenu implements Screen {
         stage.addActor(background);
         stage.addActor(window);
         stage.addActor(buttonStartGame);
+        stage.addActor(title);
 
 
 
@@ -128,6 +143,8 @@ public class ScreenMenu implements Screen {
     public void resize(int width, int height) {
 
         stage.getViewport().update(width, height, true);
+
+        //stage.getActors().get(0).set
 
         batch.setProjectionMatrix(camera.combined);
         camera.update();

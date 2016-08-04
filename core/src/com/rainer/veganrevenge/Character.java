@@ -37,7 +37,7 @@ public class Character extends AnimatedGameObject  {
 
     Body physicsBody;
 
-    Bar healthBar = null;
+    //Bar healthBar = null;
 
     ArrayList<Sensor> sensorArray = new ArrayList<Sensor>();
 
@@ -164,9 +164,11 @@ public class Character extends AnimatedGameObject  {
     public void drawUI(ShapeRenderer renderer, Camera cam) {
         super.drawUI(renderer, cam);
 
+        /*
         if (healthBar != null) {
             healthBar.drawUI(renderer, cam);
         }
+        */
     }
 
     protected void addSensor(World world, float range, String tag){
