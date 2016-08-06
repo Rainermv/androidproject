@@ -72,7 +72,7 @@ public class Character extends AnimatedGameObject  {
     }
 
     public void addHealth(int health) {
-        
+
         if (health < 0){
             this.flashTint(Color.RED, 0.1f, 0.1f);
         }
