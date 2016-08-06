@@ -26,13 +26,13 @@ public class Bar extends GameObject {
 
     //Ninepatch patch = new NinePatch()
 
-    public Bar(Vector3 position, Color colorFull, Color colorEmpty, float width, float height, float maxValue, float initValue) {
-        super(position, 1);
+    public Bar(Vector3 positionMult, float widthMult, float heightMult, Color colorFull, Color colorEmpty, float maxValue, float initValue) {
+        super(new Vector3(positionMult.x * Gdx.app.getGraphics().getWidth(), positionMult.y * Gdx.app.getGraphics().getHeight(),0), 1);
 
         this.colorFull = colorFull;
         this.colorEmpty = colorEmpty;
-        this.width = width;
-        this.height = height;
+        this.width = widthMult * Gdx.app.getGraphics().getWidth();
+        this.height = heightMult  * Gdx.app.getGraphics().getHeight();
         this.value = initValue;
         this.maxValue = maxValue;
 
@@ -65,13 +65,21 @@ public class Bar extends GameObject {
 
         //Logger.log(viewHeight + " * "+ y + "=" + y *viewHeight);
 
+        //this.x = 0;
+        //this.y = 0;
+        //this.width = 10;
+        //this.height = 10;
+
         renderer.setColor(bgColor);
         renderer.rect(x, y, width, height );
+
+
         //renderer.rect( *viewWidth, y *viewHeight, width *viewWidth, height *viewHeight );
         //renderer.rect(0, 0,viewWidth, 10 );
 
         if (mult >= 0) {
             renderer.setColor(drawColor);
+            renderer.rect(x, y, width * mult, height );
             //renderer.rect(x * viewWidth, y * viewHeight, width * viewWidth * mult, height * viewHeight);
             //renderer.rect(x * viewWidth, y * viewHeight, width * viewWidth * mult, height * viewHeight);
         }

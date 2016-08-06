@@ -33,6 +33,12 @@ public class PlayerController {
 
     }
 
+    public boolean isDead() {
+
+        return (playerAvatar.flagDead && playerAvatar.isAnimationFinished());
+
+    }
+
     public void touch( ArrayList<GameObject> touchedObjects){
 
         Enemy enemyTouched = null;
@@ -51,6 +57,10 @@ public class PlayerController {
                 }
             }
         }
+
+
+
+
 
         if (enemyTouched != null && closestSensor != null){
             playerAvatar.actionAttack(enemyTouched);

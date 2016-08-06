@@ -111,7 +111,7 @@ public class ScreenGameplay implements Screen {
         static_textures.put("backdrop", new Texture("sprites/background.png"));
         //addSprites("sprites/bg.png");
 
-        PC.setPlayer(new Player(world, new Vector3(VIEWPORT_WIDTH * 0.2f, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE, PC));
+        PC.setPlayer(new Player(world, new Vector3(VIEWPORT_WIDTH * 0.2f, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
         AddCharacter(PC.getPlayer());
 
         parallaxBackground = new ParallaxBackground(new Vector3(0,0,0),
@@ -131,8 +131,8 @@ public class ScreenGameplay implements Screen {
         inputHandler.set(this, camera);
         Gdx.input.setInputProcessor(inputHandler);
 
-        this.healthBar = new Bar(new Vector3(VIEWPORT_WIDTH * 0.1f,VIEWPORT_HEIGHT * 0.8f,0f),
-                Color.GREEN, Color.RED, VIEWPORT_WIDTH * 0.6f, VIEWPORT_HEIGHT * 0.05f, PC.getPlayer().health,PC.getPlayer().health);
+        this.healthBar = new Bar(new Vector3(0.02f,0.93f,0f), 0.6f, 0.05f,
+                Color.GREEN, Color.RED, PC.getPlayer().health,PC.getPlayer().health);
 
     }
 
@@ -290,6 +290,10 @@ public class ScreenGameplay implements Screen {
         world.dispose();
         batch.dispose();
         debugRenderer.dispose();
+    }
+
+    public void endGame(){
+        gameMain.startScreen();
     }
 
 

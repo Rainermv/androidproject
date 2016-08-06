@@ -11,8 +11,6 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Player extends Character  {
 
-    PlayerController PC;
-
     public Player(World world, Vector3 position, float spriteScale, float bodyScale) {
         super(world, position, spriteScale, bodyScale);
 
@@ -53,13 +51,17 @@ public class Player extends Character  {
             //this.flagDelete = true;
             actionDie();
         }
+
+        if (animState == "DEAD" && isAnimationFinished()){
+
+        }
     }
 
     @Override
-    public void drawUI(ShapeRenderer renderer, Camera cam) {
+    public void drawUI(ShapeRenderer renderer) {
 
         //healthBar.updatePosition( cam.position);
-        super.drawUI(renderer, cam);
+        super.drawUI(renderer);
     }
 
     @Override

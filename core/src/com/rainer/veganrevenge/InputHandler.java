@@ -64,6 +64,9 @@ public class InputHandler implements InputProcessor {
 
         if (button != Input.Buttons.LEFT || pointer > 0) return false;
 
+        if (PC.isDead())
+            gameScene.endGame();
+
         cam.unproject(touch_position.set(screenX, screenY, 0));
 
         float x1 = touch_position.x  -boxSize;

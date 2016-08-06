@@ -43,6 +43,15 @@ public class GameMain extends Game{
 
 		screenGameplay = new ScreenGameplay(this);
 		setScreen(screenGameplay);
+		//screenMenu.dispose();
+
+	}
+
+	public void startScreen(){
+
+		screenMenu = new ScreenMenu(this);
+		setScreen(screenMenu);
+		//screenGameplay.dispose();
 
 	}
 

@@ -56,7 +56,7 @@ public class Character extends AnimatedGameObject  {
     private World worldReference;
 
     private HashMap<String, String> animationKeys = new HashMap<String, String>();
-    private String animState = "";
+    protected String animState = "";
 
     public boolean flagDead = false;
 
@@ -72,6 +72,7 @@ public class Character extends AnimatedGameObject  {
     }
 
     public void addHealth(int health) {
+        
         if (health < 0){
             this.flashTint(Color.RED, 0.1f, 0.1f);
         }
@@ -161,8 +162,8 @@ public class Character extends AnimatedGameObject  {
 
 
     @Override
-    public void drawUI(ShapeRenderer renderer, Camera cam) {
-        super.drawUI(renderer, cam);
+    public void drawUI(ShapeRenderer renderer) {
+        super.drawUI(renderer);
 
         /*
         if (healthBar != null) {

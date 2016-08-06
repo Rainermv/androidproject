@@ -13,7 +13,7 @@ public class Enemy extends Character {
         this.tag = "ENEMY";
 
         this.health = 30;
-        this.damage = 15;
+        this.damage = 100;
 
         this.jumpForce = 800;
         this.moveSpeed = 2;
