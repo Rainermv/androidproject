@@ -17,12 +17,10 @@ public class Sensor extends GameObject {
 
     float range = 0;
 
-    float bodyScale = 0;
-
     private World worldReference;
 
-    public Sensor(Vector3 position, float scale, float range, float bodyScale, World world, Character parent, String tag) {
-        super(position, scale);
+    public Sensor(Vector3 position, float range, World world, Character parent, String tag) {
+        super(position);
 
         //this.tag = "SENSOR";
         this.tag = tag;
@@ -31,11 +29,11 @@ public class Sensor extends GameObject {
 
         this.worldReference = world;
 
-        setUpSensor(world, bodyScale, range);
+        setUpSensor(world, range);
 
     }
 
-    private void setUpSensor( World world, float bodyScale,  float range){
+    private void setUpSensor( World world, float range){
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -45,7 +43,7 @@ public class Sensor extends GameObject {
         sensorBody = world.createBody(bodyDef);
 
         CircleShape shape = new CircleShape();;
-        shape.setRadius(range * bodyScale);
+        shape.setRadius(range);
 
         FixtureDef fixture = new FixtureDef();
 

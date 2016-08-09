@@ -14,68 +14,72 @@ import com.badlogic.gdx.utils.Array;
  */
 public class AnimationFactory {
 
-    private HashMap<String, Animation> animationHashMap = new HashMap<String, Animation>();
+    final float CHARACTER_KNIGHT_SCALE = 0.01f;
+    final float CRARACTER_ROBOT_SCALE = 0.02f;
+    final float POWERUP_SCALE = 0.002f;
 
-    private float fps = 1/15;
+
+    private HashMap<String, Animation> animationHashMap = new HashMap<String, Animation>();
+    private HashMap<String, Float> scaleHashMap = new HashMap<String, Float>();
+
+    //private float fps = 1/15;
 
     private static AnimationFactory instance;
     private AnimationFactory(){
 
-        /*
-        TextureRegion[] animFrames = new TextureRegion[10];
-
-        animationHashMap.put("knight_attack",new Animation(1/15f,
-                (textureAtlas.findRegion("Attack (1)")),
-                (textureAtlas.findRegion("Attack (2)")),
-                (textureAtlas.findRegion("Attack (3)")),
-                (textureAtlas.findRegion("Attack (4)")),
-                (textureAtlas.findRegion("Attack (5)")),
-                (textureAtlas.findRegion("Attack (6)")),
-                (textureAtlas.findRegion("Attack (7)")),
-                (textureAtlas.findRegion("Attack (8)")),
-                (textureAtlas.findRegion("Attack (9)")),
-                (textureAtlas.findRegion("Attack (10)"))));
-        */
-
     }
 
-    public void build(float fps){
+    public void build(){
 
-        this.fps = fps;
+        //this.fps = fps;
 
         animationHashMap.clear();
 
         TextureAtlas knight = new TextureAtlas(Gdx.files.internal("spritesheets/knight.txt"));
 
-        storeAnimation("knight_attack",     "Attack",    5,  10, knight, Animation.PlayMode.NORMAL);
-        storeAnimation("knight_run",        "Run",       1,   9, knight, Animation.PlayMode.LOOP);
-        storeAnimation("knight_dead",       "Dead",      1,  10, knight, Animation.PlayMode.NORMAL);
-        storeAnimation("knight_jump",       "Jump",      1,  5, knight, Animation.PlayMode.NORMAL);
-        storeAnimation("knight_jumpAttack", "JumpAttack",5, 10, knight, Animation.PlayMode.NORMAL);
+        storeAnimation("knight_attack",     "Attack",    5,  10, knight, Animation.PlayMode.NORMAL, CHARACTER_KNIGHT_SCALE, 1f/15f);
+        storeAnimation("knight_run",        "Run",       1,   9, knight, Animation.PlayMode.LOOP, CHARACTER_KNIGHT_SCALE, 1f/15f);
+        storeAnimation("knight_dead",       "Dead",      1,  10, knight, Animation.PlayMode.NORMAL, CHARACTER_KNIGHT_SCALE, 1f/15f);
+        storeAnimation("knight_jump",       "Jump",      1,  5, knight, Animation.PlayMode.NORMAL, CHARACTER_KNIGHT_SCALE, 1f/15f);
+        storeAnimation("knight_jumpAttack", "JumpAttack",5, 10, knight, Animation.PlayMode.NORMAL, CHARACTER_KNIGHT_SCALE, 1f/15f);
 
         TextureAtlas robot = new TextureAtlas(Gdx.files.internal("spritesheets/robot1.txt"));
 
-        storeAnimation("robot_attack",     "Melee",    1,  8, robot, Animation.PlayMode.NORMAL);
-        storeAnimation("robot_run",        "Run",       1,   8, robot, Animation.PlayMode.LOOP);
-        storeAnimation("robot_dead",       "Dead",      1,  10, robot, Animation.PlayMode.NORMAL);
-        storeAnimation("robot_jump",       "Jump",      1,  10, robot, Animation.PlayMode.NORMAL);
-        storeAnimation("robot_jumpAttack", "JumpMelee",1, 8, robot, Animation.PlayMode.NORMAL);
+        storeAnimation("robot_attack",     "Melee",    1,  8, robot, Animation.PlayMode.NORMAL, CRARACTER_ROBOT_SCALE, 1f/15f);
+        storeAnimation("robot_run",        "Run",       1,   8, robot, Animation.PlayMode.LOOP, CRARACTER_ROBOT_SCALE, 1f/15f);
+        storeAnimation("robot_dead",       "Dead",      1,  10, robot, Animation.PlayMode.NORMAL, CRARACTER_ROBOT_SCALE, 1f/15f);
+        storeAnimation("robot_jump",       "Jump",      1,  10, robot, Animation.PlayMode.NORMAL, CRARACTER_ROBOT_SCALE, 1f/15f);
+        storeAnimation("robot_jumpAttack", "JumpMelee",1, 8, robot, Animation.PlayMode.NORMAL, CRARACTER_ROBOT_SCALE, 1f/15f);
+
+        TextureAtlas coin = new TextureAtlas(Gdx.files.internal("spritesheets/coin.txt"));
+        storeAnimation("coin_default",     "Coin",    1,  10, coin, Animation.PlayMode.LOOP, POWERUP_SCALE, 1f/5f);
+
+        TextureAtlas health = new TextureAtlas(Gdx.files.internal("spritesheets/health.txt"));
+        storeAnimation("health_default",     "Health",    1,  8, health, Animation.PlayMode.LOOP, POWERUP_SCALE, 1f/5f);
+
+        //knight.dispose();
+        //robot.dispose();
+        //coin.dispose();
+        //health.dispose();
 
     }
 
-    private void storeAnimation(String animationKey, String name, int first, int last, TextureAtlas textureAtlas, Animation.PlayMode mode){
+
+    private void storeAnimation(String animationKey, String name, int first, int last, TextureAtlas textureAtlas, Animation.PlayMode mode,float scale, float fps){
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
         for (int i = first; i <= last; i++){
             String frameName = name + " (" + i + ")";
             //Logger.log(frameName);
+
             frames.add(textureAtlas.findRegion(frameName));
         }
 
         Animation anim = new Animation(fps, frames);
         anim.setPlayMode(mode);
 
+        scaleHashMap.put(animationKey, scale);
         animationHashMap.put(animationKey, anim);
 
     }
@@ -88,7 +92,16 @@ public class AnimationFactory {
         return instance;
     }
 
+    public float getScale(String key){
+
+        Logger.log("GET SCALE " + scaleHashMap.get(key));
+
+        return scaleHashMap.get(key);
+    }
+
+
     public Animation getAnimation(String key){
+
         return animationHashMap.get(key);
     }
 

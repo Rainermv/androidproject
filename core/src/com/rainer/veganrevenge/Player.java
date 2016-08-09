@@ -11,20 +11,30 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Player extends Character  {
 
-    public Player(World world, Vector3 position, float spriteScale, float bodyScale) {
-        super(world, position, spriteScale, bodyScale);
+    final float BODY_RADIUS = 0.8f;
+
+    final float NEAR_SENSOR_RADIUS = 5f;
+    final float FAR_SENSOR_RADIUS = 10f;
+
+    final int HEALTH = 100;
+
+    public Player(World world, Vector3 position, ScreenGameplay screenGameplay) {
+        super(position, screenGameplay);
 
         this.tag = "PLAYER";
 
-        this.health = 100;
+        this.health = HEALTH;
+        this.max_health = HEALTH;
         this.damage = 10;
 
         this.jumpForce = 400;
         this.moveSpeed = 5;
-        this.sensorRange = 5;
+        //this.sensorRange = 5;
 
-        addSensor(world, this.sensorRange, "FAR");
-        addSensor(world, this.getHeight() /2, "NEAR");
+        this.createBody(BODY_RADIUS, world);
+
+        addSensor(world, FAR_SENSOR_RADIUS, "FAR");
+        addSensor(world, NEAR_SENSOR_RADIUS, "NEAR");
 
         setAnimationKeys("knight_attack", "knight_run", "knight_dead", "knight_jump", "knight_jumpAttack");
     }

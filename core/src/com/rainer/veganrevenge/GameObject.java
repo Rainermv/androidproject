@@ -23,15 +23,11 @@ public class GameObject implements Disposable {
 
     public String tag ="";
 
-    public float SCALE;
-
     public boolean flagDelete = false;
 
-    public GameObject(Vector3 position, float scale){
+    public GameObject(Vector3 position){
         //this.rect = rectangle;
         //this.scale = scale;
-
-        this.SCALE = scale;
 
         this.updatePosition(position);
 

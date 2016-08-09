@@ -27,7 +27,7 @@ public class Bar extends GameObject {
     //Ninepatch patch = new NinePatch()
 
     public Bar(Vector3 positionMult, float widthMult, float heightMult, Color colorFull, Color colorEmpty, float maxValue, float initValue) {
-        super(new Vector3(positionMult.x * Gdx.app.getGraphics().getWidth(), positionMult.y * Gdx.app.getGraphics().getHeight(),0), 1);
+        super(new Vector3(positionMult.x * Gdx.app.getGraphics().getWidth(), positionMult.y * Gdx.app.getGraphics().getHeight(),0));
 
         this.colorFull = colorFull;
         this.colorEmpty = colorEmpty;

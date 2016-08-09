@@ -29,8 +29,6 @@ public class ScreenGameplay implements Screen {
 
     GameMain gameMain;
 
-    ScreenGameplay screenGameplay;
-
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camera;
@@ -41,16 +39,17 @@ public class ScreenGameplay implements Screen {
 
     final float CAMERA_OFFSET = 7;
 
-    final float CHARSCALE = 0.01f;
-    final float BODYSCALE = 0.8f;
+    //final float CHARSCALE = 0.01f;
+    //final float BODYSCALE = 0.8f;
+
 
     final float GRAVITY = -15;
 
-    final float SPAWN_OFFSET = 10;
+    //final float SPAWN_OFFSET = 10;
     float SPAWN_TIMER_START = 2f;
     float SPAWN_TIMER_END = 5f;
 
-    final boolean DEBUG_DRAW = false;
+    final boolean DEBUG_DRAW = true;
 
     Timer enemySpawner;
 
@@ -72,7 +71,7 @@ public class ScreenGameplay implements Screen {
     public PlayerController PC;
 
     //public Array<StaticGameObject> background = new Array<StaticGameObject>();
-    public Array<Character> characters = new Array<Character>();
+    public Array<GameObject> objects = new Array<GameObject>();
 
     public ParallaxBackground parallaxBackground = null;
 
@@ -88,7 +87,7 @@ public class ScreenGameplay implements Screen {
 
         PC = PlayerController.getInstance();
 
-        AnimationFactory.getInstance().build(ANIMATION_FPS);
+        AnimationFactory.getInstance().build();
 
         setUpBox2D();
 
@@ -111,14 +110,13 @@ public class ScreenGameplay implements Screen {
         static_textures.put("backdrop", new Texture("sprites/background.png"));
         //addSprites("sprites/bg.png");
 
-        PC.setPlayer(new Player(world, new Vector3(VIEWPORT_WIDTH * 0.2f, FLOOR_HEIGHT,0), CHARSCALE, BODYSCALE));
-        AddCharacter(PC.getPlayer());
+        PC.setPlayer(new Player(world, new Vector3(VIEWPORT_WIDTH * 0.2f, FLOOR_HEIGHT,0), this));
+        AddObject(PC.getPlayer());
 
         parallaxBackground = new ParallaxBackground(new Vector3(0,0,0),
                 static_textures.get("backdrop"),
                 static_textures.get("treeline"),
-                static_textures.get("ground"),
-                CHARSCALE * 6f, CHARSCALE * 5.5f, CHARSCALE * 4.5f);
+                static_textures.get("ground"));
 
         parallaxBackground.adjustLayerPosY(0,-8.5f);
         parallaxBackground.adjustLayerPosY(1,0.5f);
@@ -164,7 +162,7 @@ public class ScreenGameplay implements Screen {
         world = new World(new Vector2(0, GRAVITY), true);
         debugRenderer = new Box2DDebugRenderer();
 
-        theFloor = new Floor(world, 10000000000000000f, FLOOR_HEIGHT, CHARSCALE);
+        theFloor = new Floor(world, 10000000000000000f, FLOOR_HEIGHT);
 
     }
 
@@ -195,7 +193,7 @@ public class ScreenGameplay implements Screen {
 
         parallaxBackground.update(PC.getPlayer().getX());
 
-        for (GameObject obj : characters) {
+        for (GameObject obj : objects) {
             obj.update();
         }
 
@@ -213,7 +211,7 @@ public class ScreenGameplay implements Screen {
 
             world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
-            for (GameObject obj : characters) {
+            for (GameObject obj : objects) {
                 obj.fixedUpdate();
             }
         }
@@ -229,7 +227,7 @@ public class ScreenGameplay implements Screen {
 
         parallaxBackground.draw(batch);
 
-        for (GameObject obj : characters){
+        for (GameObject obj : objects){
             obj.draw(batch);
         }
         batch.end();
@@ -237,7 +235,7 @@ public class ScreenGameplay implements Screen {
         batch.setProjectionMatrix(camera.projection);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        for (GameObject obj : characters){
+        for (GameObject obj : objects){
             obj.drawUI(shapeRenderer);
         }
         healthBar.drawUI(shapeRenderer);
@@ -250,39 +248,47 @@ public class ScreenGameplay implements Screen {
 
     private void loopCleanUp(){
 
-        Iterator<Character> i = characters.iterator();
+        Iterator<GameObject> i = objects.iterator();
         while (i.hasNext()) {
-            Character character = i.next();
+            GameObject object = i.next();
 
-            if (character.flagDelete || character.getX() < camera.position.x - VIEWPORT_WIDTH){
-                if (character.tag == "PLAYER") continue;
-                character.dispose();
+            if (object.flagDelete || object.getX() < camera.position.x - VIEWPORT_WIDTH){
+
+                if (object.tag == "PLAYER") continue;
+
+                object.dispose();
                 i.remove();
                 continue;
             }
 
-            if (character.flagDead){
-                character.disposeSensors();
+            /*
+            if ((object instanceof Character) && ((Character)object).flagDead){
+
+
+                if (object.tag =="ENEMY"){
+
+                }
             }
+            */
         }
     }
 
-    private void spawnEnemy(){
+    public void spawnEnemy(){
 
         Vector3 position = new Vector3(PC.getPlayer().getX() + VIEWPORT_WIDTH * 1.1f, FLOOR_HEIGHT, 0);
-        AddCharacter(new Enemy(world, position, CHARSCALE, BODYSCALE));
+        AddObject(new Enemy(world, position, this));
 
     }
 
-    private void AddCharacter(Character c){
-        c.start();
-        characters.add(c);
+    public void AddObject(GameObject go){
+        go.start();
+        objects.add(go);
     }
 
     @Override
     public void dispose() {
 
-        for (GameObject obj : characters) {
+        for (GameObject obj : objects) {
             obj.dispose();
         }
 

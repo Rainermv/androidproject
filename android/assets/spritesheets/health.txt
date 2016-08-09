@@ -1,0 +1,61 @@
+health.png
+size: 1976, 886
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Health (1)
+  rotate: false
+  xy: 0, 0
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (2)
+  rotate: false
+  xy: 494, 0
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (3)
+  rotate: false
+  xy: 988, 0
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (4)
+  rotate: false
+  xy: 1482, 0
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (5)
+  rotate: false
+  xy: 0, 443
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (6)
+  rotate: false
+  xy: 494, 443
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (7)
+  rotate: false
+  xy: 988, 443
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1
+Health (8)
+  rotate: false
+  xy: 1482, 443
+  size: 494, 443
+  orig: 494, 443
+  offset: 0, 0
+  index: -1

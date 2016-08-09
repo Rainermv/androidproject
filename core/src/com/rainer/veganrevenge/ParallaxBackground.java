@@ -10,6 +10,10 @@ import com.badlogic.gdx.utils.Array;
  */
 public class ParallaxBackground extends GameObject{
 
+    final float SCALE_BACKDROP = 0.06f;
+    final float SCALE_TREELINE = 0.055f;
+    final float SCALE_GROUND = 0.045f;
+
     final int BACKGROUND_SIZE = 3;
     //final float SCALE_MULT = 4.5f;
 
@@ -27,12 +31,12 @@ public class ParallaxBackground extends GameObject{
 
     float last_x = 0;
 
-    public ParallaxBackground(Vector3 pos, Texture backdropTexture, Texture treelineTexture, Texture groundTexture, float scale0, float scale1, float scale2){
-        super(pos, 1);
+    public ParallaxBackground(Vector3 pos, Texture backdropTexture, Texture treelineTexture, Texture groundTexture){
+        super(pos);
 
-        backdropWidth = backdropTexture.getWidth() * scale0 ;
-        treelineWidth = treelineTexture.getWidth() * scale1;
-        groundWidth =   groundTexture.getWidth() * scale2 ;
+        backdropWidth = backdropTexture.getWidth() * SCALE_BACKDROP ;
+        treelineWidth = treelineTexture.getWidth() * SCALE_TREELINE;
+        groundWidth =   groundTexture.getWidth() * SCALE_GROUND ;
 
         for (int i = 0; i < BACKGROUND_SIZE; i++){
 
@@ -40,9 +44,9 @@ public class ParallaxBackground extends GameObject{
             float treelineX = treelineWidth * (i -1);
             float groundX   = groundWidth   * (i -1);
 
-            backdropArray.add(new StaticGameObject(new Vector3(backdropX,0,0), backdropTexture, scale0 ));
-            treelineArray.add(new StaticGameObject(new Vector3(treelineX,0,0), treelineTexture, scale1));
-            groundArray.add(new StaticGameObject  (new Vector3(groundX,0,0),   groundTexture,   scale2));
+            backdropArray.add(new StaticGameObject(new Vector3(backdropX,0,0), backdropTexture, SCALE_BACKDROP ));
+            treelineArray.add(new StaticGameObject(new Vector3(treelineX,0,0), treelineTexture, SCALE_TREELINE));
+            groundArray.add(new StaticGameObject  (new Vector3(groundX,0,0),   groundTexture,   SCALE_GROUND));
 
         }
 

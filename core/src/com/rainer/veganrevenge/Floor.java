@@ -18,9 +18,9 @@ public class Floor extends GameObject {
 
     private float width = 0;
 
-    public Floor(World world, float width, float height, float scale){
+    public Floor(World world, float width, float height){
 
-        super(new Vector3(0,0,0), scale);
+        super(new Vector3(0,0,0));
 
         this.tag = "FLOOR";
 

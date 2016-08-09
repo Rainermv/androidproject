@@ -1,6 +1,7 @@
 package com.rainer.veganrevenge;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -43,22 +45,25 @@ public class Character extends AnimatedGameObject  {
 
     boolean floorContact = true;
 
-    protected float bodyScale = 0;
+    //protected float bodyScale = 0;
     protected float bodyRadius = 0;
 
     protected int health = 0;
+    protected int max_health = 0;
     protected int damage = 0;
 
     protected float moveSpeed = 0;
     protected float jumpForce = 0;
-    protected float sensorRange = 0;
+    //protected float sensorRange = 0;
 
-    private World worldReference;
+    protected World worldReference;
 
     private HashMap<String, String> animationKeys = new HashMap<String, String>();
     protected String animState = "";
 
     public boolean flagDead = false;
+
+    ScreenGameplay screenGameplayReference;
 
     public int getHealth() {
         return health;
@@ -71,20 +76,29 @@ public class Character extends AnimatedGameObject  {
         this.damage = damage;
     }
 
-    public void addHealth(int health) {
+    public void addHealth(int health_bonus) {
 
-        if (health < 0){
+        if (health_bonus < 0){
             this.flashTint(Color.RED, 0.1f, 0.1f);
         }
-        this.health += health;
+        else if (health_bonus > 0){
+            this.flashTint(Color.WHITE, 0.1f, 0.1f);
+        }
+        this.health = MathUtils.clamp (this.health + health_bonus, 0,max_health) ;
     }
 
-    public Character (World world, Vector3 position, float spriteScale, float bodyScale){
+    public Character (Vector3 position, ScreenGameplay screenGameplay){
 
-        super(position, spriteScale);
+        super(position);
 
-        this.tag = "PLAYER";
-        this.bodyScale = bodyScale;
+        this.screenGameplayReference = screenGameplay;
+
+        this.tag = "CHARACTER";
+        //this.bodyScale = bodyScale;
+    }
+
+    protected void createBody (float bodyRadius, World world){
+
         this.worldReference = world;
 
         BodyDef bodyDef = new BodyDef();
@@ -96,7 +110,8 @@ public class Character extends AnimatedGameObject  {
 
         CircleShape shape = new CircleShape();
 
-        this.bodyRadius = getHeight()/2 * bodyScale;
+        //this.bodyRadius = getHeight()/2 * bodyScale;
+        this.bodyRadius = bodyRadius;
         shape.setRadius(this.bodyRadius);
 
         FixtureDef fixture = new FixtureDef();
@@ -174,7 +189,7 @@ public class Character extends AnimatedGameObject  {
 
     protected void addSensor(World world, float range, String tag){
 
-        sensorArray.add(new Sensor(new Vector3(this.x, this.y, 0),this.SCALE, range, this.bodyScale, world, this, tag));
+        sensorArray.add(new Sensor(new Vector3(this.x, this.y, 0), range, world, this, tag));
     }
 
     public void actionAttack(Character other){

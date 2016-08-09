@@ -77,7 +77,7 @@ public class GameMain extends Game{
 
 		parallaxBackground.update(PC.getPlayer().getX());
 
-		for (GameObject obj : characters) {
+		for (GameObject obj : objects) {
 			obj.update();
 		}
 
@@ -93,7 +93,7 @@ public class GameMain extends Game{
 
 			world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
-			for (GameObject obj : characters) {
+			for (GameObject obj : objects) {
 				obj.fixedUpdate();
 			}
 		}
@@ -109,7 +109,7 @@ public class GameMain extends Game{
 
 		parallaxBackground.draw(batch);
 
-		for (GameObject obj : characters){
+		for (GameObject obj : objects){
 			obj.draw(batch);
 		}
 		batch.end();
@@ -117,7 +117,7 @@ public class GameMain extends Game{
 		batch.setProjectionMatrix(camera.projection);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-		for (GameObject obj : characters){
+		for (GameObject obj : objects){
 			obj.drawUI(shapeRenderer, camera);
 		}
 		shapeRenderer.end();
@@ -129,7 +129,7 @@ public class GameMain extends Game{
 
 	private void loopCleanUp(){
 
-		Iterator<Character> i = characters.iterator();
+		Iterator<Character> i = objects.iterator();
 		while (i.hasNext()) {
 			Character character = i.next();
 
@@ -155,14 +155,14 @@ public class GameMain extends Game{
 
 	private void AddCharacter(Character c){
 		c.start();
-		characters.add(c);
+		objects.add(c);
 	}
 	*/
 	@Override
 	public void dispose() {
 		super.dispose();
 		/*
-		for (GameObject obj : characters) {
+		for (GameObject obj : objects) {
 			obj.dispose();
 		}
 

@@ -1,5 +1,6 @@
 package com.rainer.veganrevenge;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -8,19 +9,32 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Enemy extends Character {
 
-    public Enemy(World world, Vector3 position, float spriteScale, float bodyScale) {
-        super(world, position, spriteScale * 1.5f, bodyScale);
+    final float BODY_RADIUS = 1.5f;
+
+    final float SENSOR_RADIUS = 5f;
+    final float TOUCH_RADIUS = 2.3f;
+
+    final int HEALTH = 5;
+    final int DAMAGE = 5;
+
+    final float JUMP_FORCE = 500;
+    final float MOVE_SPEED = 2;
+
+    public Enemy(World world, Vector3 position, ScreenGameplay screenGameplay) {
+        super(position, screenGameplay);
         this.tag = "ENEMY";
 
-        this.health = 30;
-        this.damage = 100;
+        this.health = HEALTH;
+        this.damage = DAMAGE;
 
-        this.jumpForce = 800;
-        this.moveSpeed = 2;
-        this.sensorRange = 8;
+        this.jumpForce = JUMP_FORCE;
+        this.moveSpeed = MOVE_SPEED;
+        //this.sensorRange = 8;
 
-        addSensor(world, this.sensorRange, "SENSOR");
-        addSensor(world, this.bodyRadius * 1.8f, "ENEMY_TOUCH");
+        this.createBody(BODY_RADIUS, world);
+
+        addSensor(world, SENSOR_RADIUS, "SENSOR");
+        addSensor(world, TOUCH_RADIUS, "ENEMY_TOUCH");
 
         setAnimationKeys("robot_attack", "robot_run", "robot_dead", "robot_jump", "robot_jumpAttack");
     }
@@ -36,9 +50,14 @@ public class Enemy extends Character {
     public void update(){
         super.update();
 
-        if (this.health <= 0){
+        if (this.health <= 0 && !flagDead){
             //this.flagDelete = true;
             actionDie();
+
+            int POWERUP = MathUtils.random(0, 1);
+
+            screenGameplayReference.AddObject(new Powerup(worldReference, new Vector3(this.x,this.y,0), POWERUP));
+            this.disposeSensors();
         }
     }
 
@@ -65,4 +84,17 @@ public class Enemy extends Character {
             //Logger.log("PLAYER UNDETECTED");
         }
     }
+
+    @Override
+    public void dispose() {
+
+
+
+
+        super.dispose();
+
+
+    }
+
+
 }

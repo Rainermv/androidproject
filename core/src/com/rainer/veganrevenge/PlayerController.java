@@ -12,6 +12,8 @@ import java.util.ArrayList;
  */
 public class PlayerController {
 
+    private int GOLD = 0;
+
     private Player playerAvatar;
 
     private static PlayerController ourInstance = new PlayerController();
@@ -45,6 +47,19 @@ public class PlayerController {
         Sensor closestSensor = null;
 
         for (GameObject touchedObject : touchedObjects){
+
+            if (touchedObject instanceof Powerup){
+
+                Powerup powerup = (Powerup)touchedObject;
+
+                playerAvatar.addHealth(powerup.bonusHealth);
+
+                GOLD += powerup.bonusGold;
+
+                powerup.flagDelete = true;
+                return;
+            }
+
             if (touchedObject.tag == "ENEMY_TOUCH") {
                 enemyTouched = (Enemy) ((Sensor)touchedObject).parent;
             }
@@ -56,6 +71,7 @@ public class PlayerController {
                     closestSensor = touchedSensor;
                 }
             }
+
         }
 
 

@@ -23,8 +23,8 @@ public class AnimatedGameObject extends GameObject {
     TextureRegion currentFrame;
 
     private float stateTime;
-    private float height;
-    private float width;
+    //private float height;
+    //private float width;
 
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
@@ -32,38 +32,31 @@ public class AnimatedGameObject extends GameObject {
 
     private boolean flipped;
 
-    public float getHeight() {
-        return height;
-    }
-    public float getWidth() {
-        return width;
-    }
+    float animation_scale = 1.0f;
 
     public void setAnimation(String animationString) {
+
+        if (this.tag == "POWERUP"){
+            Logger.log(animationString);
+        }
         this.animation = animFactoryReference.getAnimation(animationString);
+        this.animation_scale = animFactoryReference.getScale(animationString);
         stateTime = 0f;
     }
 
     private ColorTinter tinter = new ColorTinter();
 
-    public AnimatedGameObject(Vector3 pos, float scale){
+    public AnimatedGameObject(Vector3 pos){
 
-        super(pos, scale);
+        super(pos);
 
         animFactoryReference = AnimationFactory.getInstance();
         this.animation = animFactoryReference.getAnimation("knight_run");
 
         stateTime = 0f;
 
-        updateAnimation();
-
-    }
-
-    public void updateAnimation(){
-        //this.currentFrame = animation.getKeyFrame(stateTime, true);
         this.currentFrame = animation.getKeyFrame(stateTime);
-        width = currentFrame.getRegionWidth() * SCALE;
-        height = currentFrame.getRegionHeight() * SCALE;
+
     }
 
     public boolean isAnimationFinished(){
@@ -74,7 +67,10 @@ public class AnimatedGameObject extends GameObject {
     public void draw(SpriteBatch batch) {
         super.draw(batch);
         stateTime += Gdx.graphics.getDeltaTime();
-        updateAnimation();
+
+        this.currentFrame = animation.getKeyFrame(stateTime);
+        float width = currentFrame.getRegionWidth() * animation_scale;
+        float height = currentFrame.getRegionHeight() * animation_scale;
 
         float drawWidth = width;
         float drawHeigth = height;
