@@ -59,16 +59,28 @@ public class ScreenMenu implements Screen {
         stage.clear();
         Gdx.input.setInputProcessor(stage); //** stage is responsive **//
 
-        batch = new SpriteBatch();
+        float SCREEN_WIDTH = stage.getWidth();
+        float SCREEN_HEIGHT = stage.getHeight();
 
+        batch = new SpriteBatch();
         spriteBatch = new SpriteBatch();
 
         Image background = new Image(new Texture(Gdx.files.internal("sprites/bg.png")));
         Image window = new Image(new Texture(Gdx.files.internal("sprites/Window.png")));
 
+        background.setHeight(SCREEN_HEIGHT);
+        background.setWidth(SCREEN_WIDTH);
+
         window.setHeight(window.getHeight()* 0.4f);
         window.setWidth(window.getWidth()* 0.4f);
-        window.setPosition(VIEWPORT_WIDTH/2 - window.getWidth()/2 , VIEWPORT_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
+
+        Logger.log("WINDOW WIDTH: " + window.getWidth());
+        Logger.log("SCREEN_WIDTH: " + SCREEN_WIDTH);
+        Logger.log("STAGE_WIDTH: " + stage.getWidth());
+        Logger.log("POS_X: " + (SCREEN_WIDTH/2F - (window.getWidth()/2f)));
+
+        window.setPosition(SCREEN_WIDTH/2F - (window.getWidth()/2) , SCREEN_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
+        //window.setPosition(stage.getWidth() * 0.5f - window.getWidth()/2f  , SCREEN_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
 
         buttonAtlas = new TextureAtlas(Gdx.files.internal("spritesheets/buttons.txt"));
 
@@ -82,13 +94,13 @@ public class ScreenMenu implements Screen {
         titleStyle.font = titleFont;
         titleStyle.fontColor = Color.GOLD;
 
+
+
         Label title = new Label("Sir Knight vs. the Robots", titleStyle);
-        title.setPosition(VIEWPORT_WIDTH/2 - title.getWidth()/2 , VIEWPORT_HEIGHT * 0.8f - title.getHeight()/2);
+        title.setPosition(SCREEN_WIDTH/2 - title.getWidth()/2 , SCREEN_HEIGHT * 0.8f - title.getHeight()/2);
 
         font = new BitmapFont();
         font.getData().setScale(1.2f, 1.2f);
-
-
 
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); //** Button properties **//
         style.up = buttonSkin.getDrawable("ButtonBig (4)");
@@ -99,7 +111,7 @@ public class ScreenMenu implements Screen {
         float width = buttonAtlas.findRegion("ButtonBig (4)").getTexture().getWidth() *0.2f;
 
         buttonStartGame = new TextButton("NEW GAME", style); //** Button text and style **//
-        buttonStartGame.setPosition(VIEWPORT_WIDTH/2 - width/2 , VIEWPORT_HEIGHT/2f - height/2); //** Button location **//
+        buttonStartGame.setPosition(SCREEN_WIDTH/2 - width/2 , SCREEN_HEIGHT/2f - height/2); //** Button location **//
         buttonStartGame.setHeight(height); //** Button Height **//
         buttonStartGame.setWidth(width); //** Button Width **//
 

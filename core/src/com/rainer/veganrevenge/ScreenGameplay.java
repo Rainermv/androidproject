@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,6 +16,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -34,10 +39,12 @@ public class ScreenGameplay implements Screen {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
+    final boolean DEBUG_DRAW = false;
+
     final float VIEWPORT_WIDTH = 15;//20;//80;//40;
     final float VIEWPORT_HEIGHT = 9;//12;//50;//25;
 
-    final float CAMERA_OFFSET = 7;
+    final float CAMERA_OFFSET = 5;
 
     //final float CHARSCALE = 0.01f;
     //final float BODYSCALE = 0.8f;
@@ -49,7 +56,9 @@ public class ScreenGameplay implements Screen {
     float SPAWN_TIMER_START = 2f;
     float SPAWN_TIMER_END = 5f;
 
-    final boolean DEBUG_DRAW = true;
+    float SPAWN_TIMER_DIFF = 0.2f;
+
+
 
     Timer enemySpawner;
 
@@ -77,6 +86,11 @@ public class ScreenGameplay implements Screen {
 
     final float ANIMATION_FPS = 1 / 15f;
     private Bar healthBar;
+
+    private Stage stage;
+    private TextField goldCounter;
+
+    //private BitmapFont goldCounter;
 
     public ScreenGameplay(GameMain gameMain){
         this.gameMain = gameMain;
@@ -132,6 +146,23 @@ public class ScreenGameplay implements Screen {
         this.healthBar = new Bar(new Vector3(0.02f,0.93f,0f), 0.6f, 0.05f,
                 Color.GREEN, Color.RED, PC.getPlayer().health,PC.getPlayer().health);
 
+        stage = new Stage();
+        //Gdx.input.setInputProcessor(stage);
+
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(1.5f, 1.5f);
+
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle();
+        style.font = font;
+        style.fontColor = Color.GOLD;
+
+        goldCounter = new TextField("Gold: ",style);
+        goldCounter.setPosition(Gdx.app.getGraphics().getWidth() * 0.8f,Gdx.app.getGraphics().getHeight() * 0.92f);
+
+        stage.addActor(goldCounter);
+
+        //font.getData().setScale(0.05f, 0.05f);
+        PC.reset();
     }
 
     private void cameraFollow(GameObject target){
@@ -142,7 +173,12 @@ public class ScreenGameplay implements Screen {
 
     private void scheduleSpawnTimer(){
 
-        final float spawnTime = MathUtils.random(SPAWN_TIMER_START, SPAWN_TIMER_END);
+        float mod = PC.getGold() * SPAWN_TIMER_DIFF;
+
+        float timer_min = MathUtils.clamp(SPAWN_TIMER_START - mod, 0.5f, SPAWN_TIMER_START);
+        float timer_max = MathUtils.clamp(SPAWN_TIMER_END - mod, 0.1f, SPAWN_TIMER_END);
+
+        final float spawnTime = MathUtils.random(timer_min, timer_max);
 
         enemySpawner.scheduleTask(new Timer.Task(){
 
@@ -185,6 +221,8 @@ public class ScreenGameplay implements Screen {
 
         viewport.update(width, height, true);
 
+        stage.getViewport().update(width,height,true);
+
         batch.setProjectionMatrix(camera.combined);
         camera.update();
     }
@@ -198,6 +236,7 @@ public class ScreenGameplay implements Screen {
         }
 
         healthBar.updateValue(PC.getPlayer().health);
+        goldCounter.setText("Gold: " + PC.getGold());
 
     }
 
@@ -230,15 +269,25 @@ public class ScreenGameplay implements Screen {
         for (GameObject obj : objects){
             obj.draw(batch);
         }
-        batch.end();
+
+        //goldCounter.draw(batch, "Gold: ", PC.getPlayer().x,PC.getPlayer().y);
 
         batch.setProjectionMatrix(camera.projection);
+
+        batch.end();
+
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         for (GameObject obj : objects){
             obj.drawUI(shapeRenderer);
         }
         healthBar.drawUI(shapeRenderer);
+
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+
+
         shapeRenderer.end();
 
         if (DEBUG_DRAW)

@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sun.rmi.runtime.Log;
+
 /**
  * Created by Rainer on 09/06/2016.
  */
@@ -82,8 +84,9 @@ public class Character extends AnimatedGameObject  {
             this.flashTint(Color.RED, 0.1f, 0.1f);
         }
         else if (health_bonus > 0){
-            this.flashTint(Color.WHITE, 0.1f, 0.1f);
+            this.flashTint(Color.GREEN, 0.1f, 0.1f);
         }
+
         this.health = MathUtils.clamp (this.health + health_bonus, 0,max_health) ;
     }
 
@@ -196,6 +199,8 @@ public class Character extends AnimatedGameObject  {
         if (flagDead) return;
 
         other.addHealth(-getDamage());
+
+        Logger.log("attack damage: "+ getDamage());
 
         if (this.floorContact){
             setAnimation("ATTACK");

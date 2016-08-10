@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 public class AnimationFactory {
 
     final float CHARACTER_KNIGHT_SCALE = 0.01f;
-    final float CRARACTER_ROBOT_SCALE = 0.02f;
+    final float CRARACTER_ROBOT_SCALE = 0.017f;
     final float POWERUP_SCALE = 0.002f;
 
 
@@ -93,8 +93,6 @@ public class AnimationFactory {
     }
 
     public float getScale(String key){
-
-        Logger.log("GET SCALE " + scaleHashMap.get(key));
 
         return scaleHashMap.get(key);
     }

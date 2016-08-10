@@ -9,15 +9,15 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Enemy extends Character {
 
-    final float BODY_RADIUS = 1.5f;
+    final float BODY_RADIUS = 1.4f;
 
-    final float SENSOR_RADIUS = 5f;
-    final float TOUCH_RADIUS = 2.3f;
+    final float SENSOR_RADIUS = 6f;
+    final float TOUCH_RADIUS = 1.8f;
 
-    final int HEALTH = 5;
+    final int HEALTH = 15;
     final int DAMAGE = 5;
 
-    final float JUMP_FORCE = 500;
+    final float JUMP_FORCE = 1000;
     final float MOVE_SPEED = 2;
 
     public Enemy(World world, Vector3 position, ScreenGameplay screenGameplay) {
@@ -25,6 +25,7 @@ public class Enemy extends Character {
         this.tag = "ENEMY";
 
         this.health = HEALTH;
+        this.max_health = HEALTH;
         this.damage = DAMAGE;
 
         this.jumpForce = JUMP_FORCE;

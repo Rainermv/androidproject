@@ -13,8 +13,13 @@ public class Player extends Character  {
 
     final float BODY_RADIUS = 0.8f;
 
-    final float NEAR_SENSOR_RADIUS = 5f;
-    final float FAR_SENSOR_RADIUS = 10f;
+    final float NEAR_SENSOR_RADIUS = 1f;
+    final float FAR_SENSOR_RADIUS = 4f;
+
+    final float JUMP_FORCE = 450;
+    final float MOVE_SPEED = 5;
+
+    final int DAMAGE = 5;
 
     final int HEALTH = 100;
 
@@ -25,10 +30,10 @@ public class Player extends Character  {
 
         this.health = HEALTH;
         this.max_health = HEALTH;
-        this.damage = 10;
+        this.damage = DAMAGE;
 
-        this.jumpForce = 400;
-        this.moveSpeed = 5;
+        this.jumpForce = JUMP_FORCE;
+        this.moveSpeed = MOVE_SPEED;
         //this.sensorRange = 5;
 
         this.createBody(BODY_RADIUS, world);

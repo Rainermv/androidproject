@@ -36,9 +36,6 @@ public class AnimatedGameObject extends GameObject {
 
     public void setAnimation(String animationString) {
 
-        if (this.tag == "POWERUP"){
-            Logger.log(animationString);
-        }
         this.animation = animFactoryReference.getAnimation(animationString);
         this.animation_scale = animFactoryReference.getScale(animationString);
         stateTime = 0f;

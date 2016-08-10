@@ -12,6 +12,10 @@ import java.util.ArrayList;
  */
 public class PlayerController {
 
+    public int getGold() {
+        return GOLD;
+    }
+
     private int GOLD = 0;
 
     private Player playerAvatar;
@@ -41,6 +45,10 @@ public class PlayerController {
 
     }
 
+    public void reset(){
+        GOLD = 0;
+    }
+
     public void touch( ArrayList<GameObject> touchedObjects){
 
         Enemy enemyTouched = null;
@@ -48,7 +56,7 @@ public class PlayerController {
 
         for (GameObject touchedObject : touchedObjects){
 
-            if (touchedObject instanceof Powerup){
+            if (touchedObject instanceof Powerup && !touchedObject.flagDelete){
 
                 Powerup powerup = (Powerup)touchedObject;
 
