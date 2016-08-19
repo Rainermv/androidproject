@@ -74,11 +74,6 @@ public class ScreenMenu implements Screen {
         window.setHeight(window.getHeight()* 0.4f);
         window.setWidth(window.getWidth()* 0.4f);
 
-        Logger.log("WINDOW WIDTH: " + window.getWidth());
-        Logger.log("SCREEN_WIDTH: " + SCREEN_WIDTH);
-        Logger.log("STAGE_WIDTH: " + stage.getWidth());
-        Logger.log("POS_X: " + (SCREEN_WIDTH/2F - (window.getWidth()/2f)));
-
         window.setPosition(SCREEN_WIDTH/2F - (window.getWidth()/2) , SCREEN_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
         //window.setPosition(stage.getWidth() * 0.5f - window.getWidth()/2f  , SCREEN_HEIGHT/2f - (window.getHeight()/2)); //** Button location **//
 
